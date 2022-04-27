@@ -9,7 +9,7 @@ namespace Controller.Controllers
         {
             Get("/API", async (req, res) =>
             {
-                await res.AsJson("Bienvenido");
+                await res.AsJson("Bienvenido!");
             });
         }
     }
