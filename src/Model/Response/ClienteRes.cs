@@ -7,5 +7,6 @@
         public string clie_telefono { get; set; }
         public string clie_domicilio { get; set; }
         public float clie_limite_credito { get; set; }
+        public int clie_vendedor { get; set; }
     }
 }
