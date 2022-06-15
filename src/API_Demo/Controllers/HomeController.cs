@@ -1,14 +1,16 @@
 ﻿using Carter;
 using Carter.Response;
+using Microsoft.Extensions.Logging;
 
-namespace Controller.Controllers
+namespace API_Demo.Controllers
 {
     public class HomeController : CarterModule
     {
-        public HomeController()
+        public HomeController(ILogger<HomeController> logger)
         {
             Get("/API", async (req, res) =>
             {
+                logger.LogInformation("Se inicia la API");
                 await res.AsJson("Bienvenido!");
             });
         }

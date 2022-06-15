@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Model.Request;
 
-namespace Controller.Validators
+namespace API_Demo.Validators
 {
     public class ClienteValidator : AbstractValidator<ClienteReq>
     {

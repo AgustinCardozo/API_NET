@@ -1,11 +1,11 @@
 using Carter;
-using Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Repository.Contracts;
+using Repository.Database;
 using Repository.Repositories;
 
 namespace API_Demo

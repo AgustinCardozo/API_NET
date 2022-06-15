@@ -1,8 +1,8 @@
 ﻿using Dapper;
-using Database;
 using Model.Request;
 using Model.Response;
 using Repository.Contracts;
+using Repository.Database;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
