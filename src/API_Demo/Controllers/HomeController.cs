@@ -8,7 +8,7 @@ namespace API_Demo.Controllers
     {
         public HomeController(ILogger<HomeController> logger)
         {
-            Get("/API", async (req, res) =>
+            Get("/api", async (req, res) =>
             {
                 logger.LogInformation("Se inicia la API");
                 await res.AsJson("Bienvenido!");

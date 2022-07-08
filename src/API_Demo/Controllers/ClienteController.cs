@@ -11,7 +11,7 @@ namespace API_Demo.Controllers
 {
     public class ClienteController : CarterModule
     {
-        public ClienteController(IClienteRepository clienteRepository, ILogger<ClienteController> logger) : base("API/clientes")
+        public ClienteController(IClienteRepository clienteRepository, ILogger<ClienteController> logger) : base("api/clientes")
         {
             Delete("/delete/{id}", async (req, res) =>
             {
@@ -33,7 +33,7 @@ namespace API_Demo.Controllers
                 }
             });
 
-            Get("/listado", async (req, res) =>
+            Get("/", async (req, res) =>
             {
                 logger.LogInformation("Listado de clientes");
                 var clientes = await clienteRepository.GetClientes();
@@ -51,7 +51,7 @@ namespace API_Demo.Controllers
                 }
             });
 
-            Get("/detalle/{id}", async (req, res) =>
+            Get("/{id}", async (req, res) =>
             {
                 var getClienteRequest = req.RouteValues.As<string>("id");
                 logger.LogInformation($"Se consulta el cliente con ID: {getClienteRequest}");
