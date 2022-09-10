@@ -3,7 +3,7 @@ using API_Demo.Models.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace API_Demo.Repositories.Contracts
+namespace API_Demo.Database.Repositories.Contracts
 {
     public interface IClienteRepository
     {

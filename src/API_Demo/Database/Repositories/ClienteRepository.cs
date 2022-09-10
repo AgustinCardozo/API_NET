@@ -1,14 +1,14 @@
-﻿using API_Demo.Database;
+﻿using API_Demo.Database.Repositories.Contracts;
+using API_Demo.Helpers;
 using API_Demo.Models.Requests;
 using API_Demo.Models.Responses;
-using API_Demo.Repositories.Contracts;
 using Dapper;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API_Demo.Repositories
+namespace API_Demo.Database.Repositories
 {
     public class ClienteRepository : IClienteRepository
     {
@@ -58,7 +58,7 @@ namespace API_Demo.Repositories
                     id_vendedor = clienteReq.idVendedor
                 };
 
-                if(httpMethod.ToUpper() == "CREATE")
+                if(httpMethod.ToUpper() == Consts.CREATE)
                     return await connection.ExecuteScalarAsync<string>(StoreProcName.CreateCliente, clienteParams, commandType: CommandType.StoredProcedure);
                 else
                     return await connection.ExecuteScalarAsync<string>(StoreProcName.UpdateCliente, clienteParams, commandType: CommandType.StoredProcedure);

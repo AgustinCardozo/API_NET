@@ -1,8 +1,8 @@
 //using Carter;
 using API_Demo.Database;
+using API_Demo.Database.Repositories;
+using API_Demo.Database.Repositories.Contracts;
 using API_Demo.Models.Requests;
-using API_Demo.Repositories;
-using API_Demo.Repositories.Contracts;
 using API_Demo.Services;
 using API_Demo.Services.Contracts;
 using API_Demo.Validators;
@@ -56,7 +56,10 @@ namespace API_Demo
             services.AddControllers();
             services.AddSingleton<DapperContext>();
             services.AddScoped<IValidator<ClienteReq>, ClienteValidator>();
+            services.AddScoped<IValidator<RegistrarUsuarioReq>, LogginValidator>();
             services.AddTransient<IClienteRepository, ClienteRepository>();
+            services.AddTransient<IUsuarioRepository, UsuarioRepository>();
+            services.AddTransient<ILogginService, LogginService>();
 
             string key = Configuration["JWT:key"];
 
@@ -121,6 +124,7 @@ namespace API_Demo
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                // Para que funcione en test o prod, tiene que ir fuera del if
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DEMO.API v1"));
             }

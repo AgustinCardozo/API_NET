@@ -1,4 +1,4 @@
-﻿using API_Demo.Exceptions;
+﻿using API_Demo.Models.Responses;
 using API_Demo.Services.Contracts;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,23 +17,18 @@ namespace API_Demo.Services
             _key = key;
         }
 
-        public string Authenticate(string username, string password)
+        public string Authenticate(UsuarioRes user)
         {
-            ValidationService.ValidacionDeSeguridad(password);
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                throw new UsuarioInvalidoException("Nombre de Usuario o Contraseña incorrectos.");
-            }
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.ASCII.GetBytes(_key);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Email, $"{username}@mail.com"),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, "Admin")
+                    new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+                    new Claim(ClaimTypes.Name, user.nombre),
+                    new Claim(ClaimTypes.Email, user.mail),
+                    new Claim(ClaimTypes.Role, string.IsNullOrEmpty(user.rol)? string.Empty : user.rol)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)

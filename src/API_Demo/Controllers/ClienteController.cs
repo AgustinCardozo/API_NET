@@ -1,6 +1,6 @@
-﻿using API_Demo.Helpers;
+﻿using API_Demo.Database.Repositories.Contracts;
+using API_Demo.Helpers;
 using API_Demo.Models.Requests;
-using API_Demo.Repositories.Contracts;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SpreadsheetLight;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,8 +31,8 @@ namespace API_Demo.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}/delete")]
-        public async Task<IActionResult> DeleteCliente([Required]string id)
+        [Route("{id}/delete"), Authorize(Roles = Consts.ADMIN)]
+        public async Task<IActionResult> DeleteCliente(string id)
         {
             logger.LogInformation($"Se borra el cliente con ID: {id}");
             var clienteMsg = await clienteRepository.DeleteCliente(id);
@@ -48,7 +47,7 @@ namespace API_Demo.Controllers
                 return NotFound($"No se encontro al usuario con id {id}");
             }
         }
- 
+
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> GetClientes()
@@ -107,6 +106,40 @@ namespace API_Demo.Controllers
             return Ok();
         }
 
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("test-cliente")]
+        //public async Task<IActionResult> GetCliente([FromBody] ClienteReq clienteReq)
+        //{
+        //    var cliente = await clienteRepository.GetClientes(clienteReq.idCliente);
+        //    ClienteHelper.QuitarEspacio(cliente);
+        //    return Ok(cliente);
+        //}
+
+        //[AllowAnonymous]
+        //[HttpGet]
+        //[Route("test-cliente-v1")]
+        //public async Task<IActionResult> GetClienteV1([FromBody] ClienteReq clienteReq)
+        //{
+        //    var result = await validator.ValidateAsync(clienteReq);
+        //    if (!result.IsValid)
+        //    {   
+        //        var cliente = await clienteRepository.GetClientes(clienteReq.idCliente);
+        //        ClienteHelper.QuitarEspacio(cliente);
+        //        return Ok(cliente);
+        //    }
+        //    else
+        //    {
+        //        var msg = string.Empty;
+        //        foreach(var error in result.Errors)
+        //        {
+        //            logger.LogError(error.ErrorMessage);
+        //            msg += $"{error.ErrorMessage} ";
+        //        }
+        //        return BadRequest(msg);
+        //    }
+        //}
+
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetClientes(string id)
@@ -129,7 +162,7 @@ namespace API_Demo.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreateCliente([FromBody]ClienteReq clienteReq)
+        public async Task<IActionResult> CreateCliente([FromBody] ClienteReq clienteReq)
         {
             logger.LogInformation("Se crear un nuevo cliente");
             var clienteMsg = await clienteRepository.SetCliente(clienteReq, "create");

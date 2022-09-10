@@ -1,10 +1,9 @@
-﻿using API_Demo.Exceptions;
+﻿using API_Demo.Helpers.Exceptions;
 using System.IO;
-using System.Linq;
 
 namespace API_Demo.Services
 {
-    public class ValidationService
+    public static class ValidationService
     {
         public static void ValidacionDeSeguridad(string password)
         {
@@ -21,6 +20,14 @@ namespace API_Demo.Services
                         throw new PasswordInvalidoException("Contraseña invalida");
                 }
             }
-        } 
+        }
+
+        public static void ValidacionDeUsuarioYPassword(string username, string password)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                throw new UsuarioInvalidoException("Nombre de Usuario o Contraseña incorrectos.");
+            }
+        }
     }
 }

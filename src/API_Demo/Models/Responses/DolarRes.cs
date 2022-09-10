@@ -2,7 +2,7 @@
 
 namespace API_Demo.Models.Responses
 {
-    public class Dolar
+    public class DolarRes
     {
         public DateTime fecha { get; set; }
         public double compra { get; set; }

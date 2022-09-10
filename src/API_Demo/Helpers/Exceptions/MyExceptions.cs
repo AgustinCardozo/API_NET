@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace API_Demo.Exceptions
+namespace API_Demo.Helpers.Exceptions
 {
     public class UsuarioInvalidoException : Exception
     {
@@ -14,5 +14,12 @@ namespace API_Demo.Exceptions
         public PasswordInvalidoException() : base() { }
         public PasswordInvalidoException(string message) : base(message) { }
         public PasswordInvalidoException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
+    public class LogginInvalidoException : Exception
+    {
+        public LogginInvalidoException() : base() { }
+        public LogginInvalidoException(string message) : base(message) { }
+        public LogginInvalidoException(string message, Exception innerException) : base(message, innerException) { }
     }
 }
