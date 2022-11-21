@@ -6,7 +6,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 --EXEC dbo.SYS_GetClientes '0000024324'
-CREATE PROCEDURE [dbo].[SYS_GetClientes]
+CREATE OR ALTER PROCEDURE [dbo].[SYS_GetClientes]
 @id_cliente CHAR(6)
 AS
 BEGIN
@@ -16,16 +16,14 @@ BEGIN
 	
 	BEGIN
 		IF(@id_cliente IS NULL)
-			SELECT c.clie_codigo, c.clie_razon_social, c.clie_domicilio, c.clie_limite_credito 
-			FROM GD2015C1.dbo.Cliente c
+			SELECT *
+			FROM dbo.Cliente c
 		ELSE 
-			SELECT c.clie_codigo, c.clie_razon_social, c.clie_domicilio, c.clie_limite_credito 
-			FROM GD2015C1.dbo.Cliente c WHERE c.clie_codigo = @id_cliente
+			SELECT *
+			FROM dbo.Cliente c WHERE c.clie_codigo = @id_cliente
 	END
 	
 END
-
-USE [GD2015C1]
 GO
 /****** Object:  StoredProcedure [dbo].[SYS_CreateCliente]    Script Date: 27/4/2022 12:56:57 ******/
 SET ANSI_NULLS ON
@@ -33,7 +31,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 --EXEC dbo.SYS_CreateCliente '000008', 'LALA SA', '48484848', 'Darwin 706', 6000.0, 3
-ALTER PROCEDURE [dbo].[SYS_CreateCliente]
+CREATE OR ALTER PROCEDURE [dbo].[SYS_CreateCliente]
 @id_cliente CHAR(6), @razon_social CHAR(100), @telefono CHAR(100), @domicilio CHAR(100), @limite DECIMAL(12,2), @id_vendedor NUMERIC(6,0)
 AS
 BEGIN
@@ -57,15 +55,13 @@ BEGIN
 			SELECT 'ERROR'
 	END
 END
-
-USE [GD2015C1]
 GO
 /****** Object:  StoredProcedure [dbo].[SYS_DeleteCliente]    Script Date: 27/4/2022 14:19:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[SYS_DeleteCliente]
+CREATE OR ALTER PROCEDURE [dbo].[SYS_DeleteCliente]
 @id_cliente CHAR(6)
 AS
 BEGIN
@@ -85,7 +81,6 @@ BEGIN
 	
 END
 
-USE [GD2015C1]
 GO
 /****** Object:  StoredProcedure [dbo].[SYS_UpdateCliente]    Script Date: 27/4/2022 18:06:43 ******/
 SET ANSI_NULLS ON
@@ -93,7 +88,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 --EXEC dbo.SYS_UpdateCliente '000004', 'LALA SA', '48484848', 'Darwin 706', 5000, 1
-ALTER PROCEDURE [dbo].[SYS_UpdateCliente]
+CREATE OR ALTER PROCEDURE [dbo].[SYS_UpdateCliente]
 @id_cliente CHAR(6), @razon_social CHAR(100) = NULL, @telefono CHAR(100) = NULL, @domicilio CHAR(100) = NULL, @limite NUMERIC(6,0) = NULL, @id_vendedor NUMERIC(6,0)
 AS
 BEGIN
@@ -119,4 +114,35 @@ BEGIN
 	END
 END
 
+GO
+
 SELECT * FROM dbo.Cliente WHERE clie_codigo LIKE '00000%'
+
+GO 
+
+IF OBJECT_ID('GD2015C1.dbo.Usuarios') IS NOT NULL
+	DROP TABLE dbo.Usuarios
+
+CREATE TABLE GD2015C1.dbo.Usuarios(
+	[id] [int] IDENTITY(1,1) NOT NULL,    
+	[usuario] [nvarchar](100) NOT NULL,
+	[password] [nvarchar](250) NOT NULL,
+	[mail] [nvarchar](250) NOT NULL,
+	[nombre] [nvarchar](100) NOT NULL,
+	[rol][nvarchar](50) NULL,
+	[createdAt][datetime] NOT NULL, 
+	[updatedAt][datetime] NULL, 
+	[deletedAt][datetime] NULL,
+	PRIMARY KEY(id)
+);
+
+
+GO
+
+select * from GD2015C1.dbo.Usuarios
+
+GO
+
+truncate table GD2015C1.dbo.Usuarios
+
+GO
