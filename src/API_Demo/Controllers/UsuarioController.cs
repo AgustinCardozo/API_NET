@@ -17,7 +17,7 @@ namespace API_Demo.Controllers
 
         [AllowAnonymous]
         [HttpGet, Route("")]
-        public IActionResult GetAllUsers()
+        public IActionResult GetUsers()
         {
             var users = usuarioRepository.GetUsuarios();
             var usersList = new List<UsuarioRes>();

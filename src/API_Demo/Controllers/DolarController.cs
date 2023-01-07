@@ -4,11 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace API_Demo.Controllers
 {
@@ -31,31 +28,6 @@ namespace API_Demo.Controllers
         [Route("dolar-oficial"), Authorize(Roles = Consts.ADMIN)]
         public async Task<IActionResult> GetCotizacionDolarOficial()
         {
-            //const string reason = "Service Unavailable";
-            //using (var httpClient = new HttpClient())
-            //{
-            //    try
-            //    {
-            //        //var response = await httpClient.GetAsync(configuration.GetSection("URL:dolar_oficial").Value);
-            //        var response = await httpClient.GetStringAsync(configuration.GetSection(Consts.ConfigKeys.DOLAR_OFICIAL).Value);
-
-            //        //if (response.ReasonPhrase == reason)
-            //        //{
-            //        //    return Problem();
-            //        //}
-
-            //        //if (!response.IsSuccessStatusCode)
-            //        //    return NotFound();
-            //        //var content = JsonConvert.DeserializeObject<DolarRes>(await response.Content.ReadAsStringAsync());
-            //        var content = JsonConvert.DeserializeObject<DolarRes>(response);
-            //        return Ok(content);
-            //    }
-            //    catch(Exception ex)
-            //    {
-            //        logger.LogError(ex.Message);
-            //        return Problem(ex.Message);
-            //    }
-            //}
             return await GetCotizacion(Consts.ConfigKeys.DOLAR_OFICIAL);
         }
 
@@ -64,21 +36,6 @@ namespace API_Demo.Controllers
         [Route("dolar-blue"), Authorize(Roles = Consts.ADMIN)]
         public async Task<IActionResult> GetCotizacionDolarBlue()
         {
-            //using (var httpClient = new HttpClient())
-            //{
-            //    try
-            //    {
-            //        var response = await httpClient.GetStringAsync(configuration.GetSection(Consts.ConfigKeys.DOLAR_BLUE).Value);
-            //        var content = JsonConvert.DeserializeObject<DolarRes>(response);
-            //        //content.fecha = Convert.ToDateTime(content.fecha.ToString("yyyy-MM-dd HH:mm:ss"));
-            //        return Ok(content);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        logger.LogError(ex.Message);
-            //        return Problem(ex.Message);
-            //    }
-            //}
             return await GetCotizacion(Consts.ConfigKeys.DOLAR_BLUE);
         }
 
