@@ -1,11 +1,14 @@
 //using Carter;
-using API_Demo.Database;
-using API_Demo.Database.Repositories;
-using API_Demo.Database.Repositories.Contracts;
-using API_Demo.Models.Requests;
-using API_Demo.Services;
-using API_Demo.Services.Contracts;
-using API_Demo.Validators;
+global using API_Demo.Database;
+global using API_Demo.Database.Repositories;
+global using API_Demo.Database.Repositories.Contracts;
+global using API_Demo.Helpers;
+global using API_Demo.Helpers.Exceptions;
+global using API_Demo.Models.Requests;
+global using API_Demo.Models.Responses;
+global using API_Demo.Services;
+global using API_Demo.Services.Contracts;
+global using API_Demo.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -51,6 +54,9 @@ namespace API_Demo
 
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             logger.LogInformation($"ENVIRONMENT: {environment}", DateTimeOffset.Now);
+            var conn = Configuration.GetConnectionString(Consts.ConfigKeys.CONN_DB);
+            var connLog = !conn.Contains("Integrated Security") ? PasswordHelper.HideConnectionString(conn) : conn;
+            logger.LogInformation($"ConnStr: {connLog}");
 
             //services.AddCarter();
             services.AddControllers();
@@ -126,7 +132,10 @@ namespace API_Demo
                 app.UseDeveloperExceptionPage();
                 // Para que funcione en test o prod, tiene que ir fuera del if
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DEMO.API v1"));
+                app.UseSwaggerUI(c => { 
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DEMO.API v1");
+                    c.DefaultModelsExpandDepth(-1); //Oculta los Schemas de SwaggerUI
+                });
             }
 
             app.UseHttpsRedirection();

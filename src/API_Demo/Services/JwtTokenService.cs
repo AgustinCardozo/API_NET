@@ -1,6 +1,4 @@
-﻿using API_Demo.Models.Responses;
-using API_Demo.Services.Contracts;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

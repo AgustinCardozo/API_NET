@@ -1,6 +1,4 @@
-﻿using API_Demo.Models.Requests;
-using API_Demo.Models.Responses;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace API_Demo.Database.Repositories.Contracts

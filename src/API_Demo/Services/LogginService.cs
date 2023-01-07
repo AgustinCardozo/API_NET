@@ -1,9 +1,4 @@
-﻿using API_Demo.Database.Repositories.Contracts;
-using API_Demo.Helpers.Exceptions;
-using API_Demo.Models.Requests;
-using API_Demo.Services.Contracts;
-using API_Demo.Validators;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 
 namespace API_Demo.Services

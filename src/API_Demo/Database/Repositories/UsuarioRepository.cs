@@ -1,8 +1,4 @@
-﻿using API_Demo.Database.Repositories.Contracts;
-using API_Demo.Helpers;
-using API_Demo.Models.Requests;
-using API_Demo.Models.Responses;
-using Dapper;
+﻿using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +21,7 @@ namespace API_Demo.Database.Repositories
                 return connection.QueryFirstOrDefault<UsuarioRes>(
                     sql: "SELECT * FROM GD2015C1.dbo.Usuarios WHERE usuario = @usuario",
                     param: new { usuario = usuario }
-                    );
+                );
             }
         }
 
@@ -53,7 +49,7 @@ namespace API_Demo.Database.Repositories
                         rol = user.esAdmin ? Consts.ADMIN : null,
                         createdAt = DateTime.Now
                     }
-                    );
+                );
             }
         }
     }

@@ -14,6 +14,6 @@ namespace API_Demo.Database
             this.configuration = configuration;
         }
 
-        public IDbConnection CreateConnection() => new SqlConnection(configuration.GetConnectionString("DatabaseConnection"));
+        public IDbConnection CreateConnection() => new SqlConnection(configuration.GetConnectionString(Consts.ConfigKeys.CONN_DB));
     }
 }

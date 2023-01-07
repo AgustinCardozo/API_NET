@@ -4,5 +4,20 @@
     {
         public const string ADMIN = "ADMIN";
         public const string CREATE = "CREATE";
+
+        public static class ConfigKeys
+        {
+            public const string CONN_DB = "DatabaseConnection"; 
+            public const string DOLAR_OFICIAL = "URL:dolar_oficial"; 
+            public const string DOLAR_BLUE = "URL:dolar_blue"; 
+        }
+
+        public static class StoreProcName
+        {
+            public const string CreateCliente = "SYS_CreateCliente";
+            public const string DeleteCliente = "SYS_DeleteCliente";
+            public const string GetClientes = "SYS_GetClientes";
+            public const string UpdateCliente = "SYS_UpdateCliente";
+        }
     }
 }

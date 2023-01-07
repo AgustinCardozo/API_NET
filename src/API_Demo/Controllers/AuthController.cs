@@ -1,8 +1,6 @@
-﻿using API_Demo.Helpers;
-using API_Demo.Models.Requests;
-using API_Demo.Services.Contracts;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Security.Claims;
@@ -16,11 +14,13 @@ namespace API_Demo.Controllers
     {
         private readonly ILogger<AuthController> logger;
         private readonly ILogginService logginService;
+        private readonly IConfiguration configuration;
 
-        public AuthController(ILogger<AuthController> logger, ILogginService logginService)
+        public AuthController(ILogger<AuthController> logger, ILogginService logginService, IConfiguration configuration)
         {
             this.logger = logger;
             this.logginService = logginService;
+            this.configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -61,7 +61,7 @@ namespace API_Demo.Controllers
             }
         }
 
-        [HttpGet, Route("user"), Authorize(Roles = Consts.ADMIN)]
+        [HttpGet, Route("usuario"), Authorize(Roles = Consts.ADMIN)]
         public IActionResult GetUsuario()
         {
             var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -70,6 +70,12 @@ namespace API_Demo.Controllers
             var role = User.FindFirstValue(ClaimTypes.Role);
 
             return Ok(new { id, name, mail, role });
+        }
+
+        [HttpGet("password/{pass}"), AllowAnonymous]
+        public IActionResult GetPassword(string pass)
+        {
+            return Ok(MD5Service.Decrypt(pass, configuration.GetValue<string>("Hash")));
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using API_Demo.Models.Requests;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace API_Demo.Validators
 {

@@ -1,8 +1,4 @@
-﻿using API_Demo.Database.Repositories.Contracts;
-using API_Demo.Helpers;
-using API_Demo.Models.Requests;
-using API_Demo.Models.Responses;
-using Dapper;
+﻿using Dapper;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -24,7 +20,7 @@ namespace API_Demo.Database.Repositories
             using(var connection = dapperContext.CreateConnection())
             {
                 var clienteParam = new { id_cliente = idCliente };
-                return await connection.ExecuteScalarAsync<string>(StoreProcName.DeleteCliente, clienteParam, commandType: CommandType.StoredProcedure);
+                return await connection.ExecuteScalarAsync<string>(Consts.StoreProcName.DeleteCliente, clienteParam, commandType: CommandType.StoredProcedure);
             }
         }
 
@@ -38,7 +34,7 @@ namespace API_Demo.Database.Repositories
                     clienteReq = new ClienteReq { idCliente = idCliente };
 
                 var clienteParam = new { id_cliente = clienteReq.idCliente };
-                var data = await connection.QueryAsync<ClienteRes>(StoreProcName.GetClientes, clienteParam, commandType: CommandType.StoredProcedure);
+                var data = await connection.QueryAsync<ClienteRes>(Consts.StoreProcName.GetClientes, clienteParam, commandType: CommandType.StoredProcedure);
 
                 return data.ToList();
             }
@@ -59,9 +55,9 @@ namespace API_Demo.Database.Repositories
                 };
 
                 if(httpMethod.ToUpper() == Consts.CREATE)
-                    return await connection.ExecuteScalarAsync<string>(StoreProcName.CreateCliente, clienteParams, commandType: CommandType.StoredProcedure);
+                    return await connection.ExecuteScalarAsync<string>(Consts.StoreProcName.CreateCliente, clienteParams, commandType: CommandType.StoredProcedure);
                 else
-                    return await connection.ExecuteScalarAsync<string>(StoreProcName.UpdateCliente, clienteParams, commandType: CommandType.StoredProcedure);
+                    return await connection.ExecuteScalarAsync<string>(Consts.StoreProcName.UpdateCliente, clienteParams, commandType: CommandType.StoredProcedure);
 
             }
         }

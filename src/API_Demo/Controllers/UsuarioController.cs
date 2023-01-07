@@ -1,8 +1,7 @@
-﻿using API_Demo.Database.Repositories.Contracts;
-using API_Demo.Helpers;
-using API_Demo.Models.Requests;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace API_Demo.Controllers
 {
@@ -16,16 +15,35 @@ namespace API_Demo.Controllers
             this.usuarioRepository = usuarioRepository;
         }
 
+        [AllowAnonymous]
         [HttpGet, Route("")]
         public IActionResult GetAllUsers()
         {
-            return Ok(usuarioRepository.GetUsuarios());
+            var users = usuarioRepository.GetUsuarios();
+            var usersList = new List<UsuarioRes>();
+
+            foreach (var user in users)
+            {
+                var requestBody = PasswordHelper.HideUserPassword(user);
+                usersList.Add(JsonConvert.DeserializeObject<UsuarioRes>(requestBody));
+            }
+            
+            return Ok(usersList);
         }
 
+        [AllowAnonymous]
         [HttpGet, Route("by-name/{username}")]
         public IActionResult GetUserByName(string username)
         {
-            return Ok(usuarioRepository.GetUsuario(username));
+            var user = usuarioRepository.GetUsuario(username);
+
+            if(user == null)
+            {
+                return NotFound($"No se encontro al usuario {username}");
+            }
+
+            var requestBody = PasswordHelper.HideUserPassword(user);
+            return Ok(requestBody);
         }
 
         [HttpPost, Route("insert")]

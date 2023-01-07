@@ -1,14 +1,11 @@
-﻿using API_Demo.Database.Repositories.Contracts;
-using API_Demo.Helpers;
-using API_Demo.Models.Requests;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SpreadsheetLight;
-using System;
 using System.Data;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,6 +56,7 @@ namespace API_Demo.Controllers
             return Ok(clientes);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("csv")]
         [RequestSizeLimit(100_000_000)]
@@ -79,14 +77,15 @@ namespace API_Demo.Controllers
             return File(content, "clientes/csv", "clientes.csv");
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("xlsx")]
-        //agrega el archivo el proyecto -> bin -> debug 
         public async Task<IActionResult> GetClientesXlsl()
         {
             var clientes = await clienteRepository.GetClientes();
             ClienteHelper.QuitarEspacio(clientes);
-            var pathFile = AppDomain.CurrentDomain.BaseDirectory + "test.xlsx";
+            //var pathFile = AppDomain.CurrentDomain.BaseDirectory + "test.xlsx"; //agrega el archivo el proyecto -> bin -> debug 
+            //var pathFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/test.xlsx";
             var document = new SLDocument();
             var table = new DataTable();
 
@@ -102,8 +101,14 @@ namespace API_Demo.Controllers
             }
 
             document.ImportDataTable(1, 1, table, true);
-            document.SaveAs(pathFile);
-            return Ok();
+            //document.SaveAs(pathFile);
+            using (var stream = new MemoryStream())
+            {
+                document.SaveAs(stream);
+                var content = stream.ToArray();
+                return File(content,  "application/xlsx", "clientes.xlsx"); //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            }
+            //return Ok();
         }
 
         //[AllowAnonymous]
