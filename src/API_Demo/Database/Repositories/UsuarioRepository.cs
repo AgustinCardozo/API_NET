@@ -35,6 +35,12 @@ namespace API_Demo.Database.Repositories
 
         public void InsertarUsuario(RegistrarUsuarioReq user)
         {
+            var result = new UsuarioValidator().Validate(user);
+            if (!result.IsValid)
+            {
+                throw new LogginInvalidoException("Datos de registros incorrectos");
+            }
+
             using (var connection = dapperContext.CreateConnection())
             {
                 connection.ExecuteScalar(

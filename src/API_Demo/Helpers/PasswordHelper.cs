@@ -23,7 +23,7 @@ namespace API_Demo.Helpers
 
             if (requestJson["password"] != null)
             {
-                requestJson["password"] = "xxx";
+                requestJson["password"] = "*****";
             }
 
             requestBody = requestJson.ToString(Formatting.Indented);

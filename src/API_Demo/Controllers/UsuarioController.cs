@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -17,7 +18,9 @@ namespace API_Demo.Controllers
 
         [AllowAnonymous]
         [HttpGet, Route("")]
-        public IActionResult GetUsers()
+        [ProducesResponseType(typeof(List<UsuarioRes>), StatusCodes.Status200OK)] //Muestra la estructura de lo que va a devolver el json
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult GetUsers()
         {
             var users = usuarioRepository.GetUsuarios();
             var usersList = new List<UsuarioRes>();
@@ -33,7 +36,9 @@ namespace API_Demo.Controllers
 
         [AllowAnonymous]
         [HttpGet, Route("by-name/{username}")]
-        public IActionResult GetUserByName(string username)
+        [ProducesResponseType(typeof(UsuarioRes), StatusCodes.Status200OK)] 
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult GetUserByName(string username)
         {
             var user = usuarioRepository.GetUsuario(username);
 

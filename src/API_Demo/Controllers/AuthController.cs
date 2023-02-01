@@ -36,8 +36,8 @@ namespace API_Demo.Controllers
             }
             catch (Exception ex)
             {
-                string exceptionMessage = $"Error: {ex.Message} {(ex.InnerException != null ? $" - InnerException: " + ex.InnerException.Message : "")} - StackTrace: {ex.StackTrace}";
-                logger.LogError(exceptionMessage);
+                //string exceptionMessage = $"Error: {ex.Message} {(ex.InnerException != null ? $" - InnerException: " + ex.InnerException.Message : "")} - StackTrace: {ex.StackTrace}";
+                logger.LogError(ErrorMessage.GetException(ex));
                 return BadRequest(ex.Message);
             }
         }
@@ -55,8 +55,8 @@ namespace API_Demo.Controllers
             }
             catch (Exception ex)
             {
-                string exceptionMessage = $"Error: {ex.Message} {(ex.InnerException != null ? $" - InnerException: " + ex.InnerException.Message : "")} - StackTrace: {ex.StackTrace}";
-                logger.LogError(exceptionMessage);
+                //string exceptionMessage = $"Error: {ex.Message} {(ex.InnerException != null ? $" - InnerException: " + ex.InnerException.Message : "")} - StackTrace: {ex.StackTrace}";
+                logger.LogError(ErrorMessage.GetException(ex));
                 return BadRequest(ex.Message);
             }
         }

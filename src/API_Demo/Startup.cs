@@ -62,7 +62,7 @@ namespace API_Demo
             services.AddControllers();
             services.AddSingleton<DapperContext>();
             services.AddScoped<IValidator<ClienteReq>, ClienteValidator>();
-            services.AddScoped<IValidator<RegistrarUsuarioReq>, LogginValidator>();
+            services.AddScoped<IValidator<RegistrarUsuarioReq>, UsuarioValidator>();
             services.AddTransient<IClienteRepository, ClienteRepository>();
             services.AddTransient<IUsuarioRepository, UsuarioRepository>();
             services.AddTransient<ILogginService, LogginService>();

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SpreadsheetLight;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Text;
@@ -80,7 +81,8 @@ namespace API_Demo.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("xlsx")]
-        public async Task<IActionResult> GetClientesXlsl()
+        [RequestSizeLimit(100_000_000)]
+        public async Task<IActionResult> GetClientesXls()
         {
             var clientes = await clienteRepository.GetClientes();
             ClienteHelper.QuitarEspacio(clientes);
@@ -106,44 +108,39 @@ namespace API_Demo.Controllers
             {
                 document.SaveAs(stream);
                 var content = stream.ToArray();
-                return File(content,  "application/xlsx", "clientes.xlsx"); //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                return File(content, "application/xlsx", "clientes.xlsx"); //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             }
             //return Ok();
         }
 
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("test-cliente")]
-        //public async Task<IActionResult> GetCliente([FromBody] ClienteReq clienteReq)
-        //{
-        //    var cliente = await clienteRepository.GetClientes(clienteReq.idCliente);
-        //    ClienteHelper.QuitarEspacio(cliente);
-        //    return Ok(cliente);
-        //}
+        [AllowAnonymous]
+        [HttpGet("read-xlsx")]
+        [RequestSizeLimit(100_000_000)]
+        public IActionResult GetClientesFromXLS()
+        {
+            int indice = 2; //Si es fuera 1, va a leer la 1er fila
+            var clientes = new List<ClienteRes>();
 
-        //[AllowAnonymous]
-        //[HttpGet]
-        //[Route("test-cliente-v1")]
-        //public async Task<IActionResult> GetClienteV1([FromBody] ClienteReq clienteReq)
-        //{
-        //    var result = await validator.ValidateAsync(clienteReq);
-        //    if (!result.IsValid)
-        //    {   
-        //        var cliente = await clienteRepository.GetClientes(clienteReq.idCliente);
-        //        ClienteHelper.QuitarEspacio(cliente);
-        //        return Ok(cliente);
-        //    }
-        //    else
-        //    {
-        //        var msg = string.Empty;
-        //        foreach(var error in result.Errors)
-        //        {
-        //            logger.LogError(error.ErrorMessage);
-        //            msg += $"{error.ErrorMessage} ";
-        //        }
-        //        return BadRequest(msg);
-        //    }
-        //}
+            var file = new FileInfo("Assets/clientes.xlsx");
+            var document = new SLDocument(file.FullName);
+
+            while (!string.IsNullOrEmpty(document.GetCellValueAsString(indice, 1)))
+            {
+                var cliente = new ClienteRes
+                {
+                    clie_codigo = document.GetCellValueAsString(indice, 1),
+                    clie_razon_social = document.GetCellValueAsString(indice, 2),
+                    clie_telefono = document.GetCellValueAsString(indice, 3),
+                    clie_domicilio = document.GetCellValueAsString(indice, 4),
+                    clie_limite_credito = (float)document.GetCellValueAsDouble(indice, 5),
+                    clie_vendedor = document.GetCellValueAsInt32(indice, 6)
+                };
+
+                clientes.Add(cliente);
+                indice++;
+            }
+            return Ok(clientes);
+        }
 
         [HttpGet]
         [Route("{id}")]

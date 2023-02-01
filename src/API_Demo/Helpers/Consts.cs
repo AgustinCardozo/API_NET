@@ -7,9 +7,13 @@
 
         public static class ConfigKeys
         {
-            public const string CONN_DB = "DatabaseConnection"; 
-            public const string DOLAR_OFICIAL = "URL:dolar_oficial"; 
-            public const string DOLAR_BLUE = "URL:dolar_blue"; 
+            public const string CONN_DB = "DatabaseConnection";
+            public static class URL
+            {
+                public const string DOLAR_OFICIAL = "URL:dolar_oficial";
+                public const string DOLAR_BLUE = "URL:dolar_blue";
+                public const string COTIZADOR = "URL:cotizador";
+            }
         }
 
         public static class StoreProcName

@@ -1,6 +1,4 @@
-﻿using API_Demo.Models.Responses;
-
-namespace API_Demo.Services.Contracts
+﻿namespace API_Demo.Services.Contracts
 {
     public interface IJwtTokenService
     {
