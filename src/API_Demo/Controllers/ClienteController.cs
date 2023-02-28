@@ -46,6 +46,7 @@ namespace API_Demo.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> GetClientes()
@@ -53,7 +54,7 @@ namespace API_Demo.Controllers
             logger.LogInformation("Listado de clientes");
             var clientes = await clienteRepository.GetClientes();
             logger.LogInformation($"Status Code: {StatusCodes.Status200OK}");
-            ClienteHelper.QuitarEspacio(clientes);
+            //ClienteHelper.QuitarEspacio(clientes);
             return Ok(clientes);
         }
 
@@ -64,7 +65,7 @@ namespace API_Demo.Controllers
         public async Task<IActionResult> GetClientesCSV()
         {
             var clientes = await clienteRepository.GetClientes();
-            ClienteHelper.QuitarEspacio(clientes);
+            //ClienteHelper.QuitarEspacio(clientes);
 
             var csv = new StringBuilder();
             csv.AppendLine("ID;RAZON SOCIAL;TELEFONO;TELEFONO;LIMITE DE CRED;ID VENDEDOR");
@@ -85,7 +86,7 @@ namespace API_Demo.Controllers
         public async Task<IActionResult> GetClientesXls()
         {
             var clientes = await clienteRepository.GetClientes();
-            ClienteHelper.QuitarEspacio(clientes);
+            //ClienteHelper.QuitarEspacio(clientes);
             //var pathFile = AppDomain.CurrentDomain.BaseDirectory + "test.xlsx"; //agrega el archivo el proyecto -> bin -> debug 
             //var pathFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/test.xlsx";
             var document = new SLDocument();
@@ -148,7 +149,7 @@ namespace API_Demo.Controllers
         {
             logger.LogInformation($"Se consulta el cliente con ID: {id}");
             var clientes = await clienteRepository.GetClientes(id);
-            ClienteHelper.QuitarEspacio(clientes);
+            //ClienteHelper.QuitarEspacio(clientes);
 
             if (clientes != null && clientes.Count != 0)
             {

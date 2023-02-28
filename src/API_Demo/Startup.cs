@@ -135,6 +135,7 @@ namespace API_Demo
                 app.UseSwaggerUI(c => { 
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "DEMO.API v1");
                     c.DefaultModelsExpandDepth(-1); //Oculta los Schemas de SwaggerUI
+                    c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
                 });
             }
 

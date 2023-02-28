@@ -1,13 +1,14 @@
 USE [GD2015C1]
 GO
-/****** Object:  StoredProcedure [dbo].[SYS_GetClientes]    Script Date: 27/4/2022 11:06:32 ******/
+/****** Object:  StoredProcedure [dbo].[SYS_GetClientes]    Script Date: 23/2/2023 00:54:38 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 --EXEC dbo.SYS_GetClientes '0000024324'
+--EXEC dbo.SYS_GetClientes null
 CREATE OR ALTER PROCEDURE [dbo].[SYS_GetClientes]
-@id_cliente CHAR(6)
+@id_cliente CHAR(50)
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -16,14 +17,17 @@ BEGIN
 	
 	BEGIN
 		IF(@id_cliente IS NULL)
-			SELECT *
+			SELECT ltrim(rtrim(clie_codigo)) 'clie_codigo', ltrim(rtrim(clie_razon_social)) 'clie_razon_social', 
+				ltrim(rtrim(clie_telefono)) 'clie_telefono', ltrim(rtrim(clie_domicilio)) 'clie_domicilio', clie_limite_credito, clie_vendedor
 			FROM dbo.Cliente c
 		ELSE 
-			SELECT *
+			SELECT ltrim(rtrim(clie_codigo)) 'clie_codigo', ltrim(rtrim(clie_razon_social)) 'clie_razon_social', 
+				ltrim(rtrim(clie_telefono)) 'clie_telefono', ltrim(rtrim(clie_domicilio)) 'clie_domicilio', clie_limite_credito, clie_vendedor			
 			FROM dbo.Cliente c WHERE c.clie_codigo = @id_cliente
 	END
 	
 END
+
 GO
 /****** Object:  StoredProcedure [dbo].[SYS_CreateCliente]    Script Date: 27/4/2022 12:56:57 ******/
 SET ANSI_NULLS ON
