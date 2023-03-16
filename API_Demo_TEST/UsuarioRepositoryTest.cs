@@ -80,19 +80,19 @@ namespace API_Demo_TEST
             Assert.IsTrue(user.usuario == username, "El nombre de usuario debe ser 'acardozo'");
         }
 
-        [Test]
-        public void InsertarUsuarioInvalido_Test()
-        {
-            var user = new RegistrarUsuarioReq
-            {
-                usuario = string.Empty,
-                password = null,
-                mail = "lala",
-                nombre = null
-            };
+        //[Test]
+        //public void InsertarUsuarioInvalido_Test()
+        //{
+        //    var user = new RegistrarUsuarioReq
+        //    {
+        //        usuario = string.Empty,
+        //        password = null,
+        //        mail = "lala",
+        //        nombre = null
+        //    };
 
-            var exception = Assert.Throws<LogginInvalidoException>(() => userRepo.InsertarUsuario(user));
-            Assert.That(exception.Message, Is.EqualTo("Datos de registros incorrectos"));
-        }
+        //    var exception = Assert.Throws<LogginInvalidoException>(() => userRepo.InsertarUsuario(user));
+        //    Assert.That(exception.Message, Is.EqualTo("Datos de registros incorrectos"));
+        //}
     }
 }

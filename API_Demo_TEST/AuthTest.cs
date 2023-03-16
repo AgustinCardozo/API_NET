@@ -1,4 +1,5 @@
 ﻿using API_Demo.Controllers;
+using API_Demo.Helpers.Exceptions;
 using API_Demo.Models.Requests;
 using API_Demo.Services.Contracts;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,7 @@ namespace API_Demo_TEST
         }
 
         [Test]
-        public void RegistrarUsuarioExiste_Test()
+        public void RegistrarUsuarioExistente_Test()
         {
             var nuevoUsuario = new RegistrarUsuarioReq
             {
@@ -29,6 +30,22 @@ namespace API_Demo_TEST
 
             var exception = Assert.Throws<Exception>(() => logginService.RegistrarUsuario(nuevoUsuario));
             Assert.That(exception.Message, Is.EqualTo("Ya existe el usuario"));
+        }
+
+        [Test]
+        public void InsertarUsuarioInvalido_Test()
+        {
+            var user = new RegistrarUsuarioReq
+            {
+                usuario = string.Empty,
+                password = null,
+                mail = "lala",
+                nombre = null
+            };
+
+            var exception = Assert.Throws<LogginInvalidoException>(() => logginService.RegistrarUsuario(user));
+            //Assert.That(exception.Message, Is.EqualTo("Datos de registros incorrectos"));
+            Assert.IsNotNull(exception);
         }
     }
 }

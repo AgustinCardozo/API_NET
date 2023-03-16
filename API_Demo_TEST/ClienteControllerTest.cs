@@ -24,7 +24,7 @@ namespace API_Demo_TEST
         }
 
         [Test]
-        public async Task UpdateClienteInvadio()
+        public async Task UpdateClienteInvalido()
         {
             var req = new ClienteReq
             {
