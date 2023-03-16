@@ -7,5 +7,6 @@ namespace API_Demo.Database.Repositories.Contracts
         void InsertarUsuario(RegistrarUsuarioReq user);
         List<UsuarioRes> GetUsuarios();
         UsuarioRes GetUsuario(string usuario);
+        void ModificarPassUsuario(int idUsuario, string password);
     }
 }

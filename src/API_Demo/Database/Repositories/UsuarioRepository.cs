@@ -35,11 +35,11 @@ namespace API_Demo.Database.Repositories
 
         public void InsertarUsuario(RegistrarUsuarioReq user)
         {
-            var result = new UsuarioValidator().Validate(user);
-            if (!result.IsValid)
-            {
-                throw new LogginInvalidoException("Datos de registros incorrectos");
-            }
+            //var result = new UsuarioValidator().Validate(user);
+            //if (!result.IsValid)
+            //{
+            //    throw new LogginInvalidoException($"Datos de registros incorrectos: {result.Errors}");
+            //}
 
             using (var connection = dapperContext.CreateConnection())
             {
@@ -55,6 +55,17 @@ namespace API_Demo.Database.Repositories
                         rol = user.esAdmin ? Consts.ADMIN : null,
                         createdAt = DateTime.Now
                     }
+                );
+            }
+        }
+
+        public void ModificarPassUsuario(int idUsuario, string password)
+        {
+            using (var connection = dapperContext.CreateConnection())
+            {
+                connection.ExecuteScalar(
+                    sql: "UPDATE GD2015C1.dbo.Usuarios SET password = @password WHERE id = @id",
+                    param: new { id = idUsuario, password = password }
                 );
             }
         }

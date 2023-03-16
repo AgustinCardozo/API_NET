@@ -31,8 +31,8 @@ namespace API_Demo.Controllers
             try
             {
                 logger.LogInformation("Generando token de inicio de seccion");
-                string token = logginService.IniciarSeccion(user);
-                return Ok(token);
+                //string token = logginService.IniciarSeccion(user);
+                return Ok(logginService.IniciarSeccion(user));
             }
             catch (Exception ex)
             {
@@ -50,8 +50,8 @@ namespace API_Demo.Controllers
             try
             {
                 logger.LogInformation("Generando token de registro de nuevo usuario");
-                string token = logginService.RegistrarUsuario(user);
-                return Ok(token);
+                //string token = logginService.RegistrarUsuario(user);
+                return Ok(logginService.RegistrarUsuario(user));
             }
             catch (Exception ex)
             {
@@ -72,10 +72,24 @@ namespace API_Demo.Controllers
             return Ok(new { id, name, mail, role });
         }
 
-        [HttpGet("password/{pass}"), AllowAnonymous]
+        [HttpGet("password/{pass}"), Authorize(Roles = Consts.ADMIN)]
         public IActionResult GetPassword(string pass)
         {
             return Ok(MD5Service.Decrypt(pass, configuration.GetValue<string>("Hash")));
+        }
+
+        [HttpPost("reestablecer-password"), AllowAnonymous]
+        public IActionResult ModificarPasswordUsuario(ReestrablecerPassReq user)
+        {
+            try
+            {
+                logginService.RestaurarPassword(user.username, user.password);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return Problem(ErrorMessage.GetException(ex));
+            }
         }
     }
 }

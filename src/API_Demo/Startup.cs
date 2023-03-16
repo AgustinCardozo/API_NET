@@ -44,15 +44,16 @@ namespace API_Demo
 
             //var logger = loggerFactory.CreateLogger<Startup>();
 
-            using var loggerFactory = LoggerFactory.Create(builder =>
-            {
-                builder.SetMinimumLevel(LogLevel.Information);
-                builder.AddConsole();
-                builder.AddEventSourceLogger();
-            });
-            var logger = loggerFactory.CreateLogger("Startup");
+            //using var loggerFactory = LoggerFactory.Create(builder =>
+            //{
+            //    builder.SetMinimumLevel(LogLevel.Information);
+            //    builder.AddConsole();
+            //    builder.AddEventSourceLogger();
+            //});
+            //var logger = loggerFactory.CreateLogger("Startup");
+            var logger = LoggerService.GetLogger();
 
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var environment = Environment.GetEnvironmentVariable(Consts.StartupConfig.ENVIRONMENT);
             logger.LogInformation($"ENVIRONMENT: {environment}", DateTimeOffset.Now);
             var conn = Configuration.GetConnectionString(Consts.ConfigKeys.CONN_DB);
             var connLog = !conn.Contains("Integrated Security") ? PasswordHelper.HideConnectionString(conn) : conn;
@@ -63,11 +64,11 @@ namespace API_Demo
             services.AddSingleton<DapperContext>();
             services.AddScoped<IValidator<ClienteReq>, ClienteValidator>();
             services.AddScoped<IValidator<RegistrarUsuarioReq>, UsuarioValidator>();
-            services.AddTransient<IClienteRepository, ClienteRepository>();
-            services.AddTransient<IUsuarioRepository, UsuarioRepository>();
-            services.AddTransient<ILogginService, LogginService>();
+            services.AddScoped<IClienteRepository, ClienteRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<ILogginService, LogginService>(); 
 
-            string key = Configuration["JWT:key"];
+            //string key = Configuration["JWT:key"];
 
             services.AddAuthentication(x =>
             {
@@ -80,7 +81,7 @@ namespace API_Demo
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration[Consts.StartupConfig.JWT_KEY])),
                     ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
@@ -88,7 +89,10 @@ namespace API_Demo
                 };
             });
             services.AddAuthorization();
-            services.AddSingleton<IJwtTokenService>(new JwtTokenService(key));
+            services.AddSingleton<IJwtTokenService>(new JwtTokenService(Configuration[Consts.StartupConfig.JWT_KEY]));
+
+            environment = conn = connLog = null;
+            //loggerFactory.Dispose();           
 
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo

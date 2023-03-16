@@ -4,6 +4,13 @@
     {
         public const string ADMIN = "ADMIN";
         public const string CREATE = "CREATE";
+        public const string PATH = "Assets/10k-most-common-passwords.txt";
+
+        public static class StartupConfig
+        {
+            public const string ENVIRONMENT = "ASPNETCORE_ENVIRONMENT";
+            public const string JWT_KEY = "JWT:key";
+        }
 
         public static class ConfigKeys
         {

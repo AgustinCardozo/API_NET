@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
+using System.Linq;
+using System.Text;
 
 namespace API_Demo.Services
 {
@@ -28,7 +30,11 @@ namespace API_Demo.Services
             var result = new UsuarioValidator().Validate(usuario);
             if (!result.IsValid)
             {
-                throw new LogginInvalidoException("Datos de registros incorrectos");
+                var errors = result.Errors.ToList();
+                var errorMsg = new StringBuilder();
+                errorMsg.AppendLine("Datos de registros incorrectos: ");
+                errors.ForEach(error => errorMsg.AppendLine($"\t{error}"));
+                throw new LogginInvalidoException(errorMsg.ToString());
             }
 
             ValidationService.ValidacionDeSeguridad(usuario.password);
@@ -57,10 +63,24 @@ namespace API_Demo.Services
 
             if (usuario.password != MD5Service.Decrypt(user.password, hash))
             {
-                throw new Exception("Contraseña invalida");
+                throw new Exception("CONTRASEÑA INVÁLIDA: No coincide la contraseña");
             }
 
             return jwtTokenService.Authenticate(user);
+        }
+
+        public void RestaurarPassword(string username, string nuevoPass)
+        {
+            UsuarioRes user = usuarioRepository.GetUsuario(username);
+
+            if (user == null)
+            {
+                throw new Exception("No existe el usuario");
+            }
+
+            ValidationService.ValidacionDeSeguridad(nuevoPass);
+            nuevoPass = MD5Service.Encrypt(nuevoPass, hash);
+            usuarioRepository.ModificarPassUsuario(user.id, nuevoPass);
         }
     }
 }

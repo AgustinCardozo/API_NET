@@ -51,7 +51,7 @@ namespace API_Demo.Controllers
             return Ok(requestBody);
         }
 
-        [HttpPost, Route("insert")]
+        [HttpPost, Route("")]
         public void InsertUser(RegistrarUsuarioReq usuarioReq)
         {
             usuarioRepository.InsertarUsuario(usuarioReq);

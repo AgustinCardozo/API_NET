@@ -4,5 +4,6 @@
     {
         string RegistrarUsuario(RegistrarUsuarioReq usuario);
         string IniciarSeccion(UsuarioLogginReq usuario);
+        void RestaurarPassword(string username, string nuevoPass);
     }
 }

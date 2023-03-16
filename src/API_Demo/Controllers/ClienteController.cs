@@ -29,7 +29,7 @@ namespace API_Demo.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}/delete"), Authorize(Roles = Consts.ADMIN)]
+        [Route("{id}"), Authorize(Roles = Consts.ADMIN)]
         public async Task<IActionResult> DeleteCliente(string id)
         {
             logger.LogInformation($"Se borra el cliente con ID: {id}");
@@ -164,7 +164,7 @@ namespace API_Demo.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("")]
         public async Task<IActionResult> CreateCliente([FromBody] ClienteReq clienteReq)
         {
             logger.LogInformation("Se crear un nuevo cliente");
@@ -183,7 +183,7 @@ namespace API_Demo.Controllers
         }
 
         [HttpPut]
-        [Route("update")]
+        [Route("")]
         public async Task<IActionResult> UpdateCliente([FromBody] ClienteReq clienteReq)
         {
             var result = await validator.ValidateAsync(clienteReq);

@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="test.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Carter" Version="5.1.0" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.8" />
@@ -23,9 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="test.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Update="Assets\10k-most-common-passwords.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 
