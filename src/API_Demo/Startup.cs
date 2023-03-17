@@ -1,4 +1,3 @@
-//using Carter;
 global using API_Demo.Database;
 global using API_Demo.Database.Repositories;
 global using API_Demo.Database.Repositories.Contracts;
@@ -9,18 +8,15 @@ global using API_Demo.Models.Responses;
 global using API_Demo.Services;
 global using API_Demo.Services.Contracts;
 global using API_Demo.Validators;
+using API_Demo.Services.Configs;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System;
-using System.Text;
 
 namespace API_Demo
 {
@@ -36,96 +32,28 @@ namespace API_Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //net 6
-            //using var loggerFactory = LoggerFactory.Create(builder =>
-            //{
-            //    builder.AddSimpleConsole(i => i.ColorBehavior = LoggerColorBehavior.Disabled);
-            //});
+            var logger = LoggerConfigService.GetLogger();
 
-            //var logger = loggerFactory.CreateLogger<Startup>();
-
-            //using var loggerFactory = LoggerFactory.Create(builder =>
-            //{
-            //    builder.SetMinimumLevel(LogLevel.Information);
-            //    builder.AddConsole();
-            //    builder.AddEventSourceLogger();
-            //});
-            //var logger = loggerFactory.CreateLogger("Startup");
-            var logger = LoggerService.GetLogger();
-
-            var environment = Environment.GetEnvironmentVariable(Consts.StartupConfig.ENVIRONMENT);
+            string environment = Environment.GetEnvironmentVariable(Consts.StartupConfig.ENVIRONMENT);
             logger.LogInformation($"ENVIRONMENT: {environment}", DateTimeOffset.Now);
-            var conn = Configuration.GetConnectionString(Consts.ConfigKeys.CONN_DB);
-            var connLog = !conn.Contains("Integrated Security") ? PasswordHelper.HideConnectionString(conn) : conn;
+            string conn = Configuration.GetConnectionString(Consts.ConfigKeys.CONN_DB);
+            string connLog = !conn.Contains("Integrated Security") ? PasswordHelper.HideConnectionString(conn) : conn;
             logger.LogInformation($"ConnStr: {connLog}");
 
-            //services.AddCarter();
             services.AddControllers();
             services.AddSingleton<DapperContext>();
             services.AddScoped<IValidator<ClienteReq>, ClienteValidator>();
             services.AddScoped<IValidator<RegistrarUsuarioReq>, UsuarioValidator>();
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-            services.AddScoped<ILogginService, LogginService>(); 
+            services.AddScoped<ILogginService, LogginService>();
 
-            //string key = Configuration["JWT:key"];
+            AuthenticationConfigService.AddAuthenticationConfiguration(services, Configuration[Consts.StartupConfig.JWT_KEY]);
 
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration[Consts.StartupConfig.JWT_KEY])),
-                    ValidateAudience = false,
-                    ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    ValidateIssuer = false
-                };
-            });
-            services.AddAuthorization();
-            services.AddSingleton<IJwtTokenService>(new JwtTokenService(Configuration[Consts.StartupConfig.JWT_KEY]));
-
-            environment = conn = connLog = null;
+            //environment = conn = connLog = null;
             //loggerFactory.Dispose();           
 
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "DEMO.API",
-                    Version = "v1",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Agustin Cardozo",
-                        Email = "agustincardozo8@yahoo.com",
-                        Url = new Uri("https://github.com/AgustinCardozo/API_NET")
-                    }
-                });
-                var jwtSecurityScheme = new OpenApiSecurityScheme
-                {
-                    Scheme = "bearer",
-                    BearerFormat = "JWT",
-                    Name = "JWT Authentication",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.Http,
-                    Description = "Put your JWT Bearer token",
-                    Reference = new OpenApiReference
-                    {
-                        Id = JwtBearerDefaults.AuthenticationScheme,
-                        Type = ReferenceType.SecurityScheme
-                    }
-                };
-                c.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    { jwtSecurityScheme, Array.Empty<string>() }
-                });
-            });
+            SwaggerConfigService.AddSwaggerConfiguration(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -135,12 +63,7 @@ namespace API_Demo
             {
                 app.UseDeveloperExceptionPage();
                 // Para que funcione en test o prod, tiene que ir fuera del if
-                app.UseSwagger();
-                app.UseSwaggerUI(c => { 
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DEMO.API v1");
-                    c.DefaultModelsExpandDepth(-1); //Oculta los Schemas de SwaggerUI
-                    c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
-                });
+                SwaggerConfigService.UseSwaggerConfig(app);
             }
 
             app.UseHttpsRedirection();
@@ -148,8 +71,7 @@ namespace API_Demo
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
-            {
-                //endpoints.MapCarter();
+            {;
                 endpoints.MapControllers();
             });
         }

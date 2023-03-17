@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace API_Demo.Services
+namespace API_Demo.Services.Configs
 {
-    public static class LoggerService
+    public static class LoggerConfigService
     {
         public static ILogger GetLogger()
         {
