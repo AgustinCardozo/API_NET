@@ -41,11 +41,15 @@ namespace API_Demo
             logger.LogInformation($"ConnStr: {connLog}");
 
             services.AddControllers();
+            services.AddCors(policy => {
+                policy.AddDefaultPolicy(options => options.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
+            });
             services.AddSingleton<DapperContext>();
             services.AddScoped<IValidator<ClienteReq>, ClienteValidator>();
             services.AddScoped<IValidator<RegistrarUsuarioReq>, UsuarioValidator>();
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IProductoRepository, ProductoRepository>();
             services.AddScoped<ILogginService, LogginService>();
 
             AuthenticationConfigService.AddAuthenticationConfiguration(services, Configuration[Consts.StartupConfig.JWT_KEY]);
@@ -66,6 +70,13 @@ namespace API_Demo
                 SwaggerConfigService.UseSwaggerConfig(app);
             }
 
+            app.UseCors(options =>
+            {
+                options
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthentication();
