@@ -64,7 +64,7 @@ namespace API_Demo.Database.Repositories
             using (var connection = dapperContext.CreateConnection())
             {
                 connection.ExecuteScalar(
-                    sql: "UPDATE GD2015C1.dbo.Usuarios SET password = @password WHERE id = @id",
+                    sql: "UPDATE GD2015C1.dbo.Usuarios SET password = @password, updatedAt = GETDATE() WHERE id = @id",
                     param: new { id = idUsuario, password = password }
                 );
             }
