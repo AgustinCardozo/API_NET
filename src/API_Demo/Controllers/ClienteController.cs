@@ -7,6 +7,7 @@ using SpreadsheetLight;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -145,16 +146,16 @@ namespace API_Demo.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetClientes(string id)
+        public async Task<IActionResult> GetCliente(string id)
         {
             logger.LogInformation($"Se consulta el cliente con ID: {id}");
             var clientes = await clienteRepository.GetClientes(id);
-            //ClienteHelper.QuitarEspacio(clientes);
+            var cliente = clientes.FirstOrDefault();
 
-            if (clientes != null && clientes.Count != 0)
+            if (cliente is not null)
             {
                 logger.LogInformation($"StatusCode: {StatusCodes.Status200OK}");
-                return Ok(clientes[0]);
+                return Ok(cliente);
             }
             else
             {

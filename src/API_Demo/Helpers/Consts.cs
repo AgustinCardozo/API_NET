@@ -5,6 +5,7 @@
         public const string ADMIN = "ADMIN";
         public const string CREATE = "CREATE";
         public const string PATH = "Assets/10k-most-common-passwords.txt";
+        public const string ERROR_MSG = "ERROR";
 
         public static class StartupConfig
         {

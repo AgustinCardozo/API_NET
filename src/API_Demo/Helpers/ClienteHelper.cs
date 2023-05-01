@@ -6,8 +6,7 @@ namespace API_Demo.Helpers
     {
         public static bool EsValidoMensaje(string msg)
         {
-            const string errorMsg = "ERROR";
-            return !string.IsNullOrEmpty(msg) && msg != errorMsg;
+            return !string.IsNullOrEmpty(msg) && msg != Consts.ERROR_MSG;
         }
 
         public static void QuitarEspacio(List<ClienteRes> clientes)
