@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace API_Demo.Controllers
@@ -52,9 +52,10 @@ namespace API_Demo.Controllers
             {
                 try
                 {
-                    var response = await httpClient.GetStringAsync(configuration.GetSection(url).Value);
+                    //var response = await httpClient.GetStringAsync(configuration.GetSection(url).Value);
                     //var content = JsonConvert.DeserializeObject<DolarRes>(response);
-                    var content = JsonConvert.DeserializeObject<T>(response);
+                    //var content = JsonConvert.DeserializeObject<T>(response);
+                    var content = await httpClient.GetFromJsonAsync<T>(configuration.GetSection(url).Value);
                     return Ok(content);
                 }
                 catch (Exception ex)
