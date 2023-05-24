@@ -11,7 +11,9 @@ namespace API_Demo.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api/cotizador")]
+    [Route("api/v{version:apiVersion}/cotizador")]
+    //[Route("api/cotizador")]
+    [ApiVersion("1.0")]
     public class CotizadorController : ControllerBase
     {
         private readonly IConfiguration configuration;
@@ -51,7 +53,7 @@ namespace API_Demo.Controllers
             using (var httpClient = new HttpClient())
             {
                 try
-                {
+                    {
                     //var response = await httpClient.GetStringAsync(configuration.GetSection(url).Value);
                     //var content = JsonConvert.DeserializeObject<DolarRes>(response);
                     //var content = JsonConvert.DeserializeObject<T>(response);

@@ -12,6 +12,8 @@ using API_Demo.Services.Configs;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,8 +43,22 @@ namespace API_Demo
             logger.LogInformation($"ConnStr: {connLog}");
 
             services.AddControllers();
-            services.AddCors(policy => {
+            services.AddCors(policy =>
+            {
                 policy.AddDefaultPolicy(options => options.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
+            });
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+                //options.ApiVersionReader = new QueryStringApiVersionReader("api-version");
+            });
+            // this is needed to work AddApiVersioning
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;   
             });
             services.AddSingleton<DapperContext>();
             services.AddScoped<IValidator<ClienteReq>, ClienteValidator>();
@@ -52,11 +68,7 @@ namespace API_Demo
             services.AddScoped<IProductoRepository, ProductoRepository>();
             services.AddScoped<ILogginService, LogginService>();
 
-            AuthenticationConfigService.AddAuthenticationConfiguration(services, Configuration[Consts.StartupConfig.JWT_KEY]);
-
-            //environment = conn = connLog = null;
-            //loggerFactory.Dispose();           
-
+            AuthenticationConfigService.AddAuthenticationConfiguration(services, Configuration[Consts.StartupConfig.JWT_KEY]);   
             SwaggerConfigService.AddSwaggerConfiguration(services);
         }
 
@@ -82,7 +94,7 @@ namespace API_Demo
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
-            {;
+            {
                 endpoints.MapControllers();
             });
         }
