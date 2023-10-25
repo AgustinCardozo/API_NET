@@ -4,7 +4,7 @@ using System.Data.Common;
 
 namespace API_Demo.Helpers
 {
-    public class PasswordHelper
+    public static class PasswordHelper
     {
         public static string HideConnectionString(string connectionString)
         {

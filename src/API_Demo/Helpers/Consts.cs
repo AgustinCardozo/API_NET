@@ -31,5 +31,11 @@
             public const string GetClientes = "SYS_GetClientes";
             public const string UpdateCliente = "SYS_UpdateCliente";
         }
+
+        public static class Version
+        {
+            public const string V1 = "v1";
+            public const string V2 = "v2";
+        }
     }
 }

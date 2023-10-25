@@ -2,26 +2,21 @@
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace API_Demo.Controllers
+namespace API_Demo.Controllers.V1
 {
-    [ApiController]
-    [Route("API/productos")]
-    public class ProductoController : ControllerBase
+    [ApiVersion("1.0")]
+    public class ProductoController : ProductoBaseController
     {
-        private readonly IProductoRepository productoRepository;
+        public ProductoController(IProductoRepository productoRepository) : base(productoRepository) { }
 
-        public ProductoController(IProductoRepository productoRepository)
-        {
-            this.productoRepository = productoRepository;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetProductos([FromQuery]PageReq page)
+        [MapToApiVersion("1.0")]
+        public override async Task<IActionResult> GetProductos([FromQuery] PageReq page)
         {
             return Ok(await productoRepository.GetProductosPaginados(page));
         }
 
         [HttpGet("paginacion")]
+        [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetProductosPaginados([FromQuery] PageReq page)
         {
             var productos = await productoRepository.GetProductos();

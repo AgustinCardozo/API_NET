@@ -14,8 +14,8 @@ namespace API_Demo.Models.Responses
     {
         public Oficial oficial { get; set; }
         public Blue blue { get; set; }
-        public Oficial_Euro oficial_euro { get; set; }
-        public Blue_Euro blue_euro { get; set; }
+        public OficialEuro oficial_euro { get; set; }
+        public BlueEuro blue_euro { get; set; }
         public DateTime last_update { get; set; }
     }
 
@@ -33,14 +33,14 @@ namespace API_Demo.Models.Responses
         public float value_buy { get; set; }
     }
 
-    public class Oficial_Euro
+    public class OficialEuro
     {
         public float value_avg { get; set; }
         public float value_sell { get; set; }
         public float value_buy { get; set; }
     }
 
-    public class Blue_Euro
+    public class BlueEuro
     {
         public float value_avg { get; set; }
         public float value_sell { get; set; }

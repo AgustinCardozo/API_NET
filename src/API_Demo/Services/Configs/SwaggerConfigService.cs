@@ -12,31 +12,9 @@ namespace API_Demo.Services.Configs
         {
             services.AddSwaggerGen(service =>
             {
-                service.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Title = "DEMO.API",
-                    Version = "v1",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Agustin Cardozo",
-                        Email = "agustincardozo8@yahoo.com",
-                        Url = new Uri("https://github.com/AgustinCardozo/API_NET")
-                    }
-                });
-                var jwtSecurityScheme = new OpenApiSecurityScheme
-                {
-                    Scheme = "bearer",
-                    BearerFormat = "JWT",
-                    Name = "JWT Authentication",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.Http,
-                    Description = "Put your JWT Bearer token",
-                    Reference = new OpenApiReference
-                    {
-                        Id = JwtBearerDefaults.AuthenticationScheme,
-                        Type = ReferenceType.SecurityScheme
-                    }
-                };
+                service.SwaggerDoc(Consts.Version.V1, GetOpenApiInfo(Consts.Version.V1));
+                service.SwaggerDoc(Consts.Version.V2, GetOpenApiInfo(Consts.Version.V2));
+                var jwtSecurityScheme = GetOpenApiSecurityScheme();
                 service.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
                 service.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
@@ -51,9 +29,43 @@ namespace API_Demo.Services.Configs
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "DEMO.API v1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "DEMO.API v2");
                 c.DefaultModelsExpandDepth(-1); //Oculta los Schemas de SwaggerUI
                 c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
             });
+        }
+
+        private static OpenApiInfo GetOpenApiInfo(string version)
+        {
+            return new OpenApiInfo
+            {
+                Title = "DEMO.API",
+                Version = version,
+                Contact = new OpenApiContact
+                {
+                    Name = "Agustin Cardozo",
+                    Email = "agustincardozo8@yahoo.com",
+                    Url = new Uri("https://github.com/AgustinCardozo/API_NET")
+                }
+            };
+        }
+
+        private static OpenApiSecurityScheme GetOpenApiSecurityScheme()
+        {
+            return new OpenApiSecurityScheme
+            {
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Name = "JWT Authentication",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Description = "Put your JWT Bearer token",
+                Reference = new OpenApiReference
+                {
+                    Id = JwtBearerDefaults.AuthenticationScheme,
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
         }
     }
 }

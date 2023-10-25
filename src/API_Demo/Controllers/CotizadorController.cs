@@ -12,7 +12,6 @@ namespace API_Demo.Controllers
     [Authorize]
     [ApiController]
     [Route("api/v{version:apiVersion}/cotizador")]
-    //[Route("api/cotizador")]
     [ApiVersion("1.0")]
     public class CotizadorController : ControllerBase
     {
@@ -54,15 +53,11 @@ namespace API_Demo.Controllers
             {
                 try
                     {
-                    //var response = await httpClient.GetStringAsync(configuration.GetSection(url).Value);
-                    //var content = JsonConvert.DeserializeObject<DolarRes>(response);
-                    //var content = JsonConvert.DeserializeObject<T>(response);
                     var content = await httpClient.GetFromJsonAsync<T>(configuration.GetSection(url).Value);
                     return Ok(content);
                 }
                 catch (Exception ex)
                 {
-                    //string exceptionMessage = $"Error: {ex.Message} {(ex.InnerException != null ? $" - InnerException: " + ex.InnerException.Message : "")} - StackTrace: {ex.StackTrace}";
                     logger.LogError(ErrorMessage.GetException(ex));
                     return Problem(ErrorMessage.GetException(ex));
                 }

@@ -8,6 +8,7 @@ global using API_Demo.Models.Responses;
 global using API_Demo.Services;
 global using API_Demo.Services.Contracts;
 global using API_Demo.Validators;
+using API_Demo.Helpers.Filters;
 using API_Demo.Services.Configs;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
@@ -42,7 +43,14 @@ namespace API_Demo
             string connLog = !conn.Contains("Integrated Security") ? PasswordHelper.HideConnectionString(conn) : conn;
             logger.LogInformation($"ConnStr: {connLog}");
 
-            services.AddControllers();
+            services.AddLogging();
+            services.AddSingleton(typeof(ILogger), typeof(Logger<Startup>));
+
+            services.AddControllers(config =>
+            {
+                config.Filters.Add(typeof(ExceptionsFilter));
+                config.Filters.Add(typeof(RequestsFilter));
+            });
             services.AddCors(policy =>
             {
                 policy.AddDefaultPolicy(options => options.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
@@ -51,9 +59,14 @@ namespace API_Demo
             {
                 options.DefaultApiVersion = new ApiVersion(1, 0);
                 options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ApiVersionReader = new UrlSegmentApiVersionReader();
-                //options.ApiVersionReader = new QueryStringApiVersionReader("api-version");
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = ApiVersionReader
+                    .Combine(new UrlSegmentApiVersionReader(),
+                            new HeaderApiVersionReader("x-api-version"),
+                            new MediaTypeApiVersionReader("x-api-version")
+                    );
             });
+
             // this is needed to work AddApiVersioning
             services.AddVersionedApiExplorer(options =>
             {
