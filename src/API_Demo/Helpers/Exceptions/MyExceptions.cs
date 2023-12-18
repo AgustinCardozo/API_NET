@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace API_Demo.Helpers.Exceptions
 {
@@ -21,6 +22,20 @@ namespace API_Demo.Helpers.Exceptions
         public LogginInvalidoException() : base() { }
         public LogginInvalidoException(string message) : base(message) { }
         public LogginInvalidoException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
+    [Serializable]
+    public class RetryActionException : Exception
+    {
+        public RetryActionException() : base() { }
+        public RetryActionException(string message) : base(message) { }
+        public RetryActionException(string message, Exception innerException) : base(message, innerException) { }
+        protected RetryActionException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+        }
     }
 
     public static class ErrorMessage

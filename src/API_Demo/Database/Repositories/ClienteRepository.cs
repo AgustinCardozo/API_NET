@@ -30,7 +30,7 @@ namespace API_Demo.Database.Repositories
             {
                 var clienteReq = new ClienteReq();
 
-                if (idCliente != null)
+                if (idCliente is not null)
                     clienteReq = new ClienteReq { idCliente = idCliente };
 
                 var clienteParam = new { id_cliente = clienteReq.idCliente };

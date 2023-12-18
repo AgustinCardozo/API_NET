@@ -42,7 +42,7 @@ namespace API_Demo.Controllers
         {
             var user = usuarioRepository.GetUsuario(username);
 
-            if(user == null)
+            if(user is null)
             {
                 return NotFound($"No se encontro al usuario {username}");
             }

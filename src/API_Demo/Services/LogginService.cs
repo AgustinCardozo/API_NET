@@ -56,14 +56,14 @@ namespace API_Demo.Services
             ValidationService.ValidacionDeUsuarioYPassword(usuario.username, usuario.password);
             UsuarioRes user = usuarioRepository.GetUsuario(usuario.username);
 
-            if (user == null)
+            if (user is null)
             {
-                throw new Exception("No existe el usuario");
+                throw new UsuarioInvalidoException("No existe el usuario");
             }
 
             if (usuario.password != MD5Service.Decrypt(user.password, hash))
             {
-                throw new Exception("CONTRASEÑA INVÁLIDA: No coincide la contraseña");
+                throw new PasswordInvalidoException("CONTRASEÑA INVÁLIDA: No coincide la contraseña");
             }
 
             return jwtTokenService.Authenticate(user);
@@ -73,9 +73,9 @@ namespace API_Demo.Services
         {
             UsuarioRes user = usuarioRepository.GetUsuario(username);
 
-            if (user == null)
+            if (user is null)
             {
-                throw new Exception("No existe el usuario");
+                throw new UsuarioInvalidoException("No existe el usuario");
             }
 
             ValidationService.ValidacionDeSeguridad(nuevoPass);
