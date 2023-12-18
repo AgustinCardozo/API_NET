@@ -2,11 +2,11 @@
 
 namespace API_Demo_XTest.Helpers.Exceptions;
 
-public class MyExceptionsTest
+public class UsuarioInvalidoExceptionTest
 {
     private readonly string expectedMessage;
 
-    public MyExceptionsTest()
+    public UsuarioInvalidoExceptionTest()
     {
         this.expectedMessage = "The operation is invalid.";
     }
