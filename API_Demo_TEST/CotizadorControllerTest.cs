@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using RestSharp;
 
@@ -33,7 +32,7 @@ namespace API_Demo_TEST
         //{
         //    scope.Dispose();
         //}
-        
+
         protected override void InitServices()
         {
             cotizador = (CotizadorController)scope.ServiceProvider.GetService(typeof(CotizadorController));
@@ -51,7 +50,7 @@ namespace API_Demo_TEST
         [TestCase("URL:cotizador")]
         [TestCase("URL:dolar_oficial")]
         [TestCase("URL:dolar_blue")]
-        public async Task Conexion_TestAsync(string url)
+        public void Conexion_TestAsync(string url)
         {
             //using var httpClient = new HttpClient();
             //var response = await httpClient.GetStringAsync(configuration.GetValue<string>("URL:cotizador"));

@@ -8,5 +8,6 @@
     "dolar_oficial": "https://api-dolar-argentina.herokuapp.com/api/dolaroficial",
     "dolar_blue": "https://api-dolar-argentina.herokuapp.com/api/dolarblue"
   },
-  "Hash": "Whosoever holds this hammer, if they be worthy, shall possess the power of Thor"
+  "Hash": "Whosoever holds this hammer, if they be worthy, shall possess the power of Thor",
+  "MaxRetries": 3
 }

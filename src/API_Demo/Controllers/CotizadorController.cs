@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace API_Demo.Controllers
@@ -53,7 +54,7 @@ namespace API_Demo.Controllers
             {
                 try
                     {
-                    var content = await httpClient.GetFromJsonAsync<T>(configuration.GetSection(url).Value);
+                    var content = await RetryAction(async () => await httpClient.GetFromJsonAsync<T>(configuration.GetSection(url).Value));
                     return Ok(content);
                 }
                 catch (Exception ex)
@@ -62,6 +63,28 @@ namespace API_Demo.Controllers
                     return Problem(ErrorMessage.GetException(ex));
                 }
             }
+        }
+
+        private async Task<T> RetryAction<T>(Func<Task<T>> method)
+        {
+            int maxRetries = configuration.GetValue<int>("MaxRetries");
+
+            for (int i = 0; i < maxRetries; i++)
+            {
+                try
+                {
+                    return await method();
+                }
+                catch (Exception ex)
+                {
+                    logger.LogInformation("Error al procesar acción: {message}. {cantidad}", ex.Message, $"{i + 1}/{maxRetries}");
+                    if (i >= maxRetries - 1) { throw; }
+
+                    logger.LogInformation("Reintentando...");
+                    Thread.Sleep(1000);
+                }
+            }
+            throw new RetryActionException("Error al procesar acción");
         }
     }
 }
