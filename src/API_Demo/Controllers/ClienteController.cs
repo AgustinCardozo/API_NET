@@ -55,7 +55,6 @@ namespace API_Demo.Controllers
             logger.LogInformation("Listado de clientes");
             var clientes = await clienteRepository.GetClientes();
             logger.LogInformation($"Status Code: {StatusCodes.Status200OK}");
-            //ClienteHelper.QuitarEspacio(clientes);
             return Ok(clientes);
         }
 
@@ -63,21 +62,26 @@ namespace API_Demo.Controllers
         [HttpGet]
         [Route("csv")]
         [RequestSizeLimit(100_000_000)]
-        public async Task<IActionResult> GetClientesCSV()
+        public async Task<FileContentResult> GetClientesCSV()
         {
             var clientes = await clienteRepository.GetClientes();
-            //ClienteHelper.QuitarEspacio(clientes);
 
             var csv = new StringBuilder();
-            csv.AppendLine("ID;RAZON SOCIAL;TELEFONO;TELEFONO;LIMITE DE CRED;ID VENDEDOR");
+            csv.AppendLine("ID; RAZÓN SOCIAL; TELÉFONO; DOMICILIO; LIMITE DE CRED; ID VENDEDOR; áéíóúÁÉÍÓÚ");
 
             foreach (var item in clientes)
             {
-                csv.AppendLine($"{item.clie_codigo}; {item.clie_razon_social}; {item.clie_telefono};" +
-                    $"{item.clie_domicilio};{item.clie_limite_credito};{item.clie_vendedor}");
+                //csv.AppendLine($"{item.clie_codigo}; {item.clie_razon_social}; {item.clie_telefono};" +
+                //    $"{item.clie_domicilio};{item.clie_limite_credito};{item.clie_vendedor}");
+                csv.AppendLine(string.Format("{0}; {1}; {2}; {3}; {4}; {5}; {6}",
+                    item.clie_codigo, item.clie_razon_social, item.clie_telefono, item.clie_domicilio, item.clie_limite_credito, item.clie_vendedor, "áéíóúÁÉÍÓÚ")
+                );
             }
-            var content = Encoding.ASCII.GetBytes(csv.ToString());
-            return File(content, "clientes/csv", "clientes.csv");
+            var content = Encoding.Default.GetBytes(csv.ToString());
+            //var data = Encoding.UTF8.GetBytes(csv.ToString());
+            //var result = Encoding.UTF8.GetPreamble().Concat(data).ToArray();
+            //return File(result, "application/csv;charset=utf-8", "PersonalMessages.csv");
+            return File(content, "text/csv", "clientes.csv");
         }
 
         [AllowAnonymous]
@@ -87,7 +91,6 @@ namespace API_Demo.Controllers
         public async Task<IActionResult> GetClientesXls()
         {
             var clientes = await clienteRepository.GetClientes();
-            //ClienteHelper.QuitarEspacio(clientes);
             //var pathFile = AppDomain.CurrentDomain.BaseDirectory + "test.xlsx"; //agrega el archivo el proyecto -> bin -> debug 
             //var pathFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/test.xlsx";
             var document = new SLDocument();
