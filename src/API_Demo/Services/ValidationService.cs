@@ -15,7 +15,6 @@ namespace API_Demo.Services
             using (var reader = new StreamReader(fileStream))
             {
                 string line = string.Empty;
-                //line = reader.ReadLine() -> lee linea por linea
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (password.Equals(line))

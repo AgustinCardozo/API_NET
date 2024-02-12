@@ -31,12 +31,10 @@ namespace API_Demo.Controllers
             try
             {
                 logger.LogInformation("Generando token de inicio de seccion");
-                //string token = logginService.IniciarSeccion(user);
                 return Ok(logginService.IniciarSeccion(user));
             }
             catch (Exception ex)
             {
-                //string exceptionMessage = $"Error: {ex.Message} {(ex.InnerException != null ? $" - InnerException: " + ex.InnerException.Message : "")} - StackTrace: {ex.StackTrace}";
                 logger.LogError(ErrorMessage.GetException(ex));
                 return BadRequest(ex.Message);
             }
@@ -50,12 +48,10 @@ namespace API_Demo.Controllers
             try
             {
                 logger.LogInformation("Generando token de registro de nuevo usuario");
-                //string token = logginService.RegistrarUsuario(user);
                 return Ok(logginService.RegistrarUsuario(user));
             }
             catch (Exception ex)
             {
-                //string exceptionMessage = $"Error: {ex.Message} {(ex.InnerException != null ? $" - InnerException: " + ex.InnerException.Message : "")} - StackTrace: {ex.StackTrace}";
                 logger.LogError(ErrorMessage.GetException(ex));
                 return BadRequest(ex.Message);
             }
