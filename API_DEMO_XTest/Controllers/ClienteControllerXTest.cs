@@ -1,27 +1,18 @@
 using API_Demo.Controllers;
 using API_Demo.Models.Requests;
-using API_DEMO_XTest.Helpers;
+using API_Demo_XTest.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_Demo_XTest.Controllers;
 
-public class ClienteControllerXTest
+public class ClienteControllerXTest : CommonHelper<ClienteController>
 {
-    private readonly ClienteController clienteController;
-    private readonly ServiceProviderHelper serviceHelper;
-
-    public ClienteControllerXTest()
-    {
-        serviceHelper = new();
-        clienteController = serviceHelper.GetRequiredService<ClienteController>();
-    }
-
     [Fact]
     public async Task GetClientes_Test()
     {
 
-        var response = (ObjectResult)await clienteController.GetClientes();
+        var response = (ObjectResult)await service.GetClientes();
         Assert.NotNull(response);
         Assert.True(response.StatusCode == StatusCodes.Status200OK);
     }
@@ -34,7 +25,7 @@ public class ClienteControllerXTest
             domicilio = "Darwin 747"
         };
 
-        var response = (StatusCodeResult)await clienteController.UpdateCliente(req);
+        var response = (StatusCodeResult)await service.UpdateCliente(req);
         Assert.True(response.StatusCode == StatusCodes.Status500InternalServerError);
     }
 
@@ -43,7 +34,7 @@ public class ClienteControllerXTest
     [InlineData("000001234")]
     public async Task GetCliente_Test(string id)
     {
-        var response = (ObjectResult)await clienteController.GetCliente(id);
+        var response = (ObjectResult)await service.GetCliente(id);
         Assert.NotNull(response);
         if (response.StatusCode == StatusCodes.Status404NotFound)
         {

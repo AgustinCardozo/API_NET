@@ -44,8 +44,8 @@ namespace API_Demo_TEST
             };
 
             var exception = Assert.Throws<LogginInvalidoException>(() => logginService.RegistrarUsuario(user));
-            //Assert.That(exception.Message, Is.EqualTo("Datos de registros incorrectos"));
-            Assert.IsNotNull(exception);
+            Assert.True(exception.Message?.Contains("Datos de registros incorrectos"));
+            Assert.That(exception, Is.Not.Null);
         }
     }
 }
