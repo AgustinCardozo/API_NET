@@ -15,51 +15,79 @@ namespace API_Demo.Database.Repositories
             this.dapperContext = dapperContext;
         }
 
-        public async Task<string> DeleteCliente(string idCliente)
+        public async Task<string> CreateAsync(ClienteReq clienteReq)
         {
-            using(var connection = dapperContext.CreateConnection())
+            using var connection = dapperContext.CreateConnection();
+
+            var clienteParams = new
             {
-                var clienteParam = new { id_cliente = idCliente };
-                return await connection.ExecuteScalarAsync<string>(Consts.StoreProcName.DeleteCliente, clienteParam, commandType: CommandType.StoredProcedure);
-            }
+                id_cliente = clienteReq.idCliente,
+                razon_social = clienteReq.razonSocial,
+                telefono = clienteReq.telefono,
+                domicilio = clienteReq.domicilio,
+                limite = clienteReq.limite,
+                id_vendedor = clienteReq.idVendedor
+            };
+
+            return await connection.ExecuteScalarAsync<string>(
+                sql: Consts.StoreProcName.CreateCliente,
+                param: clienteParams,
+                commandType: CommandType.StoredProcedure
+            );
         }
 
-        public async Task<List<ClienteRes>> GetClientes(string idCliente = null)
+        public async Task<string> DeleteAsync(string idCliente)
         {
-            using(var connection = dapperContext.CreateConnection())
-            {
-                var clienteReq = new ClienteReq();
-
-                if (idCliente is not null)
-                    clienteReq = new ClienteReq { idCliente = idCliente };
-
-                var clienteParam = new { id_cliente = clienteReq.idCliente };
-                var data = await connection.QueryAsync<ClienteRes>(Consts.StoreProcName.GetClientes, clienteParam, commandType: CommandType.StoredProcedure);
-
-                return data.ToList();
-            }
+            using var connection = dapperContext.CreateConnection();
+            var clienteParam = new { id_cliente = idCliente };
+            return await connection.ExecuteScalarAsync<string>(
+                sql: Consts.StoreProcName.DeleteCliente,
+                param: clienteParam,
+                commandType: CommandType.StoredProcedure
+            );
         }
 
-        public async Task<string> SetCliente(ClienteReq clienteReq, string httpMethod)
+        public async Task<List<ClienteRes>> GetAllAsync()
         {
-            using (var connection = dapperContext.CreateConnection())
+            using var connection = dapperContext.CreateConnection();
+            var result = await connection
+                .QueryAsync<ClienteRes>(
+                    sql: Consts.StoreProcName.GetClientes,
+                    param: new { id_cliente = (string)null },
+                    commandType: CommandType.StoredProcedure
+                );
+            return result.ToList();
+        }
+
+        public async Task<ClienteRes> GetByIdAsync(string idCliente)
+        {
+            using var connection = dapperContext.CreateConnection();
+            return await connection.QueryFirstOrDefaultAsync<ClienteRes>(
+                sql: Consts.StoreProcName.GetClientes,
+                param: new { id_cliente = idCliente },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public async Task<string> UpdateAsync(ClienteReq clienteReq)
+        {
+            using var connection = dapperContext.CreateConnection();
+
+            var clienteParams = new
             {
-                var clienteParams = new
-                {
-                    id_cliente = clienteReq.idCliente,
-                    razon_social = clienteReq.razonSocial,
-                    telefono = clienteReq.telefono,
-                    domicilio = clienteReq.domicilio,
-                    limite = clienteReq.limite,
-                    id_vendedor = clienteReq.idVendedor
-                };
+                id_cliente = clienteReq.idCliente,
+                razon_social = clienteReq.razonSocial,
+                telefono = clienteReq.telefono,
+                domicilio = clienteReq.domicilio,
+                limite = clienteReq.limite,
+                id_vendedor = clienteReq.idVendedor
+            };
 
-                if(httpMethod.ToUpper() == Consts.CREATE)
-                    return await connection.ExecuteScalarAsync<string>(Consts.StoreProcName.CreateCliente, clienteParams, commandType: CommandType.StoredProcedure);
-                else
-                    return await connection.ExecuteScalarAsync<string>(Consts.StoreProcName.UpdateCliente, clienteParams, commandType: CommandType.StoredProcedure);
-
-            }
+            return await connection.ExecuteScalarAsync<string>(
+                sql: Consts.StoreProcName.UpdateCliente,
+                param: clienteParams,
+                commandType: CommandType.StoredProcedure
+            );
         }
     }
 }

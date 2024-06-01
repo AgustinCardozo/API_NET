@@ -5,8 +5,10 @@ namespace API_Demo.Database.Repositories.Contracts
 {
     public interface IClienteRepository
     {
-        Task<List<ClienteRes>> GetClientes(string idCliente = null);
-        Task<string> DeleteCliente(string idCliente);
-        Task<string> SetCliente(ClienteReq clienteReq, string httpMethod);
+        Task<string> CreateAsync(ClienteReq clienteReq);
+        Task<string> DeleteAsync(string idCliente);
+        Task<List<ClienteRes>> GetAllAsync();
+        Task<ClienteRes> GetByIdAsync(string idCliente);
+        Task<string> UpdateAsync(ClienteReq clienteReq);
     }
 }

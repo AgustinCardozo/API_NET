@@ -80,6 +80,7 @@ namespace API_Demo
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IProductoRepository, ProductoRepository>();
             services.AddScoped<ILogginService, LogginService>();
+            services.AddScoped<IClienteService, ClienteService>();
 
             AuthenticationConfigService.AddAuthenticationConfiguration(services, Configuration[Consts.StartupConfig.JWT_KEY]);   
             SwaggerConfigService.AddSwaggerConfiguration(services);

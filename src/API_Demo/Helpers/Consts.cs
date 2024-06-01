@@ -13,6 +13,12 @@
             public const string JWT_KEY = "JWT:key";
         }
 
+        public static class HttpMethods
+        {
+            public const string POST = "POST";
+            public const string PUT = "PUT";
+        }
+
         public static class ConfigKeys
         {
             public const string CONN_DB = "DatabaseConnection";
