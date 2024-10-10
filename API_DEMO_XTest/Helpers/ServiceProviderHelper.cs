@@ -40,6 +40,7 @@ public class ServiceProviderHelper
         serviceCollection.AddSingleton<IJwtTokenService>(new JwtTokenService(KEY));
         serviceCollection.AddTransient<ILogginService, LogginService>();
         serviceCollection.AddTransient<AuthController>();
+        serviceCollection.AddTransient<IClienteService, ClienteService>();
         serviceCollection.AddLogging();
 
         return serviceCollection;

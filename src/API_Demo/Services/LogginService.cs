@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using API_Demo.Configurations;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Text;
@@ -9,15 +11,21 @@ namespace API_Demo.Services
     {
         private readonly IJwtTokenService jwtTokenService;
         private readonly IUsuarioRepository usuarioRepository;
-        private readonly IConfiguration configuration;
+        //private readonly IConfiguration configuration;
+        private readonly IOptions<ApiDemoOptions> options;
         private string hash;
 
-        public LogginService(IJwtTokenService jwtTokenService, IUsuarioRepository usuarioRepository, IConfiguration configuration)
+        public LogginService(
+            IJwtTokenService jwtTokenService, 
+            IUsuarioRepository usuarioRepository, 
+            IOptions<ApiDemoOptions> options, 
+            IConfiguration configuration)
         {
             this.jwtTokenService = jwtTokenService;
             this.usuarioRepository = usuarioRepository;
-            this.configuration = configuration;
-            hash = configuration.GetValue<string>("Hash");
+            //this.configuration = configuration;
+            this.options = options;
+            hash = options.Value.Hash; //configuration.GetValue<string>("Hash");
         }
 
         public string RegistrarUsuario(RegistrarUsuarioReq usuario)

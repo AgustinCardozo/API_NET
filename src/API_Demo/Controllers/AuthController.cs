@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using API_Demo.Configurations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Security.Claims;
 
@@ -14,13 +16,15 @@ namespace API_Demo.Controllers
     {
         private readonly ILogger<AuthController> logger;
         private readonly ILogginService logginService;
-        private readonly IConfiguration configuration;
+        //private readonly IConfiguration configuration;
+        private readonly IOptions<ApiDemoOptions> options;
 
-        public AuthController(ILogger<AuthController> logger, ILogginService logginService, IConfiguration configuration)
+        public AuthController(ILogger<AuthController> logger, ILogginService logginService, IOptions<ApiDemoOptions> options)
         {
             this.logger = logger;
             this.logginService = logginService;
-            this.configuration = configuration;
+            //this.configuration = configuration;
+            this.options = options;
         }
 
         [AllowAnonymous]
@@ -71,7 +75,8 @@ namespace API_Demo.Controllers
         [HttpGet("password/{pass}"), Authorize(Roles = Consts.ADMIN)]
         public IActionResult GetPassword(string pass)
         {
-            return Ok(MD5Service.Decrypt(pass, configuration.GetValue<string>("Hash")));
+            //return Ok(MD5Service.Decrypt(pass, configuration.GetValue<string>("Hash")));
+            return Ok(MD5Service.Decrypt(pass, options.Value.Hash));
         }
 
         [HttpPost("reestablecer-password"), AllowAnonymous]

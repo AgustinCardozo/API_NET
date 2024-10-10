@@ -8,18 +8,18 @@ global using API_Demo.Models.Responses;
 global using API_Demo.Services;
 global using API_Demo.Services.Contracts;
 global using API_Demo.Validators;
+using System;
+using API_Demo.Configurations;
 using API_Demo.Helpers.Filters;
 using API_Demo.Services.Configs;
+using Asp.Versioning;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace API_Demo
 {
@@ -46,6 +46,10 @@ namespace API_Demo
             services.AddLogging();
             services.AddSingleton(typeof(ILogger), typeof(Logger<Startup>));
 
+            services.AddOptions()
+                .Configure<ApiDemoOptions>(Configuration.GetSection(ApiDemoOptions.Key))
+                .Configure<ConnStrOptions>(Configuration.GetSection(ConnStrOptions.Key));
+
             services.AddControllers(config =>
             {
                 config.Filters.Add(typeof(ExceptionsFilter));
@@ -60,15 +64,12 @@ namespace API_Demo
                 options.DefaultApiVersion = new ApiVersion(1, 0);
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true;
-                options.ApiVersionReader = ApiVersionReader
-                    .Combine(new UrlSegmentApiVersionReader(),
-                            new HeaderApiVersionReader("x-api-version"),
-                            new MediaTypeApiVersionReader("x-api-version")
-                    );
-            });
-
-            // this is needed to work AddApiVersioning
-            services.AddVersionedApiExplorer(options =>
+                //options.ApiVersionReader = ApiVersionReader
+                //    .Combine(new UrlSegmentApiVersionReader(),
+                //            new HeaderApiVersionReader("x-api-version"),
+                //            new MediaTypeApiVersionReader("x-api-version")
+                //    );
+            }).AddApiExplorer(options =>
             {
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;   

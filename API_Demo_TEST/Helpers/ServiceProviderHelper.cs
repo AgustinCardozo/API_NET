@@ -6,6 +6,7 @@ using API_Demo.Models.Requests;
 using API_Demo.Services;
 using API_Demo.Services.Contracts;
 using API_Demo.Validators;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using FluentValidation;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -56,6 +57,7 @@ namespace API_Demo_TEST.Helpers
             serviceCollection.AddSingleton<IJwtTokenService>(new JwtTokenService(KEY));
             serviceCollection.AddTransient<ILogginService, LogginService>();
             serviceCollection.AddTransient<AuthController>();
+            serviceCollection.AddTransient<IClienteService, ClienteService>();
 
 
             var serviceProvider = serviceCollection.BuildServiceProvider(new ServiceProviderOptions()

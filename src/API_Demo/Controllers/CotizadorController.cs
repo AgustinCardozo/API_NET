@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using API_Demo.Configurations;
+using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace API_Demo.Controllers
 {
@@ -16,12 +18,16 @@ namespace API_Demo.Controllers
     [ApiVersion("1.0")]
     public class CotizadorController : ControllerBase
     {
-        private readonly IConfiguration configuration;
+        //private readonly IConfiguration configuration;
+        private readonly IOptions<ApiDemoOptions> options;
+        private readonly UrlOptions urlOptions;
         private readonly ILogger logger;
 
-        public CotizadorController(IConfiguration configuration, ILogger<CotizadorController> logger)
+        public CotizadorController(IOptions<ApiDemoOptions> options, ILogger<CotizadorController> logger)
         {
-            this.configuration = configuration;
+            //this.configuration = configuration;
+            this.options = options;
+            urlOptions = options.Value.Api.URL;
             this.logger = logger;
         }
 
@@ -30,7 +36,8 @@ namespace API_Demo.Controllers
         [Route("dolar-oficial"), Authorize(Roles = Consts.ADMIN)]
         public async Task<IActionResult> GetCotizacionDolarOficial()
         {
-            return await GetCotizacion<DolarRes>(Consts.ConfigKeys.URL.DOLAR_OFICIAL);
+            //return await GetCotizacion<DolarRes>(Consts.ConfigKeys.URL.DOLAR_OFICIAL);
+            return await GetCotizacion<DolarRes>(urlOptions.dolar_oficial);
         }
 
         [AllowAnonymous]
@@ -38,14 +45,16 @@ namespace API_Demo.Controllers
         [Route("dolar-blue"), Authorize(Roles = Consts.ADMIN)]
         public async Task<IActionResult> GetCotizacionDolarBlue()
         {
-            return await GetCotizacion<DolarRes>(Consts.ConfigKeys.URL.DOLAR_BLUE);
+            //return await GetCotizacion<DolarRes>(Consts.ConfigKeys.URL.DOLAR_BLUE);
+            return await GetCotizacion<DolarRes>(urlOptions.dolar_blue);
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetCotizaciones()
         {
-            return await GetCotizacion<Cotizador>(Consts.ConfigKeys.URL.COTIZADOR);
+            //return await GetCotizacion<Cotizador>(Consts.ConfigKeys.URL.COTIZADOR);
+            return await GetCotizacion<Cotizador>(urlOptions.cotizador);
         }
 
         private async Task<IActionResult> GetCotizacion<T>(string url)
@@ -54,7 +63,8 @@ namespace API_Demo.Controllers
             {
                 try
                     {
-                    var content = await RetryAction(async () => await httpClient.GetFromJsonAsync<T>(configuration.GetSection(url).Value));
+                    //var content = await RetryAction(async () => await httpClient.GetFromJsonAsync<T>(configuration.GetSection(url).Value));
+                    var content = await RetryAction(async () => await httpClient.GetFromJsonAsync<T>(url));
                     return Ok(content);
                 }
                 catch (Exception ex)
@@ -67,7 +77,7 @@ namespace API_Demo.Controllers
 
         private async Task<T> RetryAction<T>(Func<Task<T>> method)
         {
-            int maxRetries = configuration.GetValue<int>("MaxRetries");
+            int maxRetries = options.Value.Api.MaxRetries; //configuration.GetValue<int>("MaxRetries");
 
             for (int i = 0; i < maxRetries; i++)
             {
