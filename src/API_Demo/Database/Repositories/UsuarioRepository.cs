@@ -18,7 +18,7 @@ namespace API_Demo.Database.Repositories
         {
             using var connection = dapperContext.CreateConnection();
             return connection.QueryFirstOrDefault<UsuarioRes>(
-                sql: "SELECT * FROM GD2015C1.dbo.Usuarios WHERE usuario = @usuario",
+                sql: "SELECT * FROM dbo.Usuarios WHERE usuario = @usuario",
                 param: new { usuario = usuario }
             );
         }
@@ -26,14 +26,14 @@ namespace API_Demo.Database.Repositories
         public List<UsuarioRes> GetUsuarios()
         {
             using var connection = dapperContext.CreateConnection();
-            return connection.Query<UsuarioRes>("SELECT * FROM GD2015C1.dbo.Usuarios").ToList();
+            return connection.Query<UsuarioRes>("SELECT * FROM dbo.Usuarios").ToList();
         }
 
         public void InsertarUsuario(RegistrarUsuarioReq user)
         {
             using var connection = dapperContext.CreateConnection();
             connection.ExecuteScalar(
-                sql: "INSERT INTO GD2015C1.dbo.Usuarios (usuario, password, mail, nombre, rol, createdAt) VALUES " +
+                sql: "INSERT INTO dbo.Usuarios (usuario, password, mail, nombre, rol, createdAt) VALUES " +
                     "(@usuario, @password, @mail, @nombre, @rol, @createdAt)",
                 param: new
                 {
@@ -51,7 +51,7 @@ namespace API_Demo.Database.Repositories
         {
             using var connection = dapperContext.CreateConnection();
             connection.ExecuteScalar(
-                sql: "UPDATE GD2015C1.dbo.Usuarios SET password = @password, updatedAt = GETDATE() WHERE id = @id",
+                sql: "UPDATE dbo.Usuarios SET password = @password, updatedAt = GETDATE() WHERE id = @id",
                 param: new { id = idUsuario, password = password }
             );
         }

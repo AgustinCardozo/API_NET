@@ -4,8 +4,9 @@
     {
         public const string ADMIN = "ADMIN";
         public const string CREATE = "CREATE";
-        public const string PATH = "Assets/10k-most-common-passwords.txt";
+        public const string DATABASE = "DatabaseName";
         public const string ERROR_MSG = "ERROR";
+        public const string PATH = "Assets/10k-most-common-passwords.txt";
 
         public static class StartupConfig
         {
@@ -24,9 +25,9 @@
             public const string CONN_DB = "DatabaseConnection";
             public static class URL
             {
-                public const string DOLAR_OFICIAL = "URL:dolar_oficial";
-                public const string DOLAR_BLUE = "URL:dolar_blue";
                 public const string COTIZADOR = "URL:cotizador";
+                public const string DOLAR_BLUE = "URL:dolar_blue";
+                public const string DOLAR_OFICIAL = "URL:dolar_oficial";
             }
         }
 

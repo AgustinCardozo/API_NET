@@ -18,6 +18,9 @@ namespace API_Demo.Database
         }
 
         //public IDbConnection CreateConnection() => new SqlConnection(configuration.GetConnectionString(Consts.ConfigKeys.CONN_DB));
-        public IDbConnection CreateConnection() => new SqlConnection(options.Value.DatabaseConnection);
+        public IDbConnection CreateConnection() => new SqlConnection(ReplaceDatabase(options.Value.DatabaseConnection));
+
+        private string ReplaceDatabase(string dbConection) =>
+            dbConection.Replace(Consts.DATABASE, options.Value.Database);
     }
 }
