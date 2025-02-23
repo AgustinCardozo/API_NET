@@ -1,7 +1,8 @@
-﻿using API_Demo.Controllers;
+﻿using API_Demo.Configurations;
+using API_Demo.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using RestSharp;
 
@@ -12,7 +13,9 @@ namespace API_Demo_TEST
         //private static IServiceScope scope;
         //ClienteHelper clienteHelper;
         private CotizadorController cotizador;
-        private IConfiguration configuration;
+        //private IConfiguration configuration;
+        private IOptions<ApiDemoOptions> options;
+        private UrlOptions urlOptions;
 
         //[SetUp]
         //public void Setup()
@@ -36,7 +39,9 @@ namespace API_Demo_TEST
         protected override void InitServices()
         {
             cotizador = (CotizadorController)scope.ServiceProvider.GetService(typeof(CotizadorController));
-            configuration = (IConfiguration)scope.ServiceProvider.GetService(typeof(IConfiguration));
+            //configuration = (IConfiguration)scope.ServiceProvider.GetService(typeof(IConfiguration));
+            options = (IOptions<ApiDemoOptions>)scope.ServiceProvider.GetService(typeof(IOptions<ApiDemoOptions>));
+            urlOptions = options.Value.Api.URL;
         }
 
         [Test]
@@ -47,9 +52,9 @@ namespace API_Demo_TEST
             Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK);
         }
 
-        [TestCase("URL:cotizador")]
-        [TestCase("URL:dolar_oficial")]
-        [TestCase("URL:dolar_blue")]
+        [TestCase("cotizador")]
+        [TestCase("dolar_oficial")]
+        [TestCase("dolar_blue")]
         public void Conexion_TestAsync(string url)
         {
             //using var httpClient = new HttpClient();
@@ -57,7 +62,16 @@ namespace API_Demo_TEST
             //Assert.IsNotNull(response);
             var client = new RestClient();
 
-            var request = new RestRequest(configuration.GetValue<string>(url), Method.Get);
+            string requestUrl = url switch
+            {
+                "cotizador" => urlOptions.cotizador,
+                "dolar_oficial" => urlOptions.dolar_oficial,
+                "dolar_blue" => urlOptions.dolar_blue,
+                _ => throw new ArgumentException($"Invalid URL key: {url}")
+            };
+
+            //var request = new RestRequest(configuration.GetValue<string>(url), Method.Get);
+            var request = new RestRequest(requestUrl, Method.Get);
             var response = client.Execute(request);
 
             if (!response.IsSuccessful)
@@ -69,6 +83,5 @@ namespace API_Demo_TEST
             Assert.IsTrue(response.IsSuccessful);
             Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
         }
-
     }
 }

@@ -1,7 +1,5 @@
 using API_Demo.Database;
 using API_Demo.Database.Repositories;
-using API_Demo.Helpers.Exceptions;
-using API_Demo.Models.Requests;
 using NUnit.Framework;
 
 namespace API_Demo_TEST

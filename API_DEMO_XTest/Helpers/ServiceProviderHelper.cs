@@ -1,4 +1,5 @@
-﻿using API_Demo.Controllers;
+﻿using API_Demo.Configurations;
+using API_Demo.Controllers;
 using API_Demo.Database;
 using API_Demo.Database.Repositories;
 using API_Demo.Database.Repositories.Contracts;
@@ -18,29 +19,32 @@ public class ServiceProviderHelper
     {
         var serviceCollection = new ServiceCollection();
 
+        var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("testsettings.json")
+                .Build();
+
         serviceCollection.AddScoped<IConfiguration>(x =>
         {
-            IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-
-            configurationBuilder
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("testsettings.json");
-
-            return configurationBuilder.Build();
+            return configuration;
         });
+
+        serviceCollection.AddOptions()
+                .Configure<ApiDemoOptions>(configuration.GetSection(ApiDemoOptions.Key))
+                .Configure<ConnStrOptions>(configuration.GetSection(ConnStrOptions.Key));
 
         const string KEY = "Whosoever holds this hammer, if they be worthy, shall possess the power of Thor";
 
-        serviceCollection.AddSingleton<DapperContext>();
-        serviceCollection.AddTransient<IValidator<ClienteReq>, ClienteValidator>();
-        serviceCollection.AddTransient<IClienteRepository, ClienteRepository>();
-        serviceCollection.AddTransient<IUsuarioRepository, UsuarioRepository>();
-        serviceCollection.AddTransient<CotizadorController>();
+        serviceCollection.AddTransient<AuthController>();
         serviceCollection.AddTransient<ClienteController>();
+        serviceCollection.AddTransient<CotizadorController>();
+        serviceCollection.AddSingleton<DapperContext>();
+        serviceCollection.AddTransient<IClienteService, ClienteService>();
         serviceCollection.AddSingleton<IJwtTokenService>(new JwtTokenService(KEY));
         serviceCollection.AddTransient<ILogginService, LogginService>();
-        serviceCollection.AddTransient<AuthController>();
-        serviceCollection.AddTransient<IClienteService, ClienteService>();
+        serviceCollection.AddTransient<IClienteRepository, ClienteRepository>();
+        serviceCollection.AddTransient<IUsuarioRepository, UsuarioRepository>();
+        serviceCollection.AddTransient<IValidator<ClienteReq>, ClienteValidator>();
         serviceCollection.AddLogging();
 
         return serviceCollection;

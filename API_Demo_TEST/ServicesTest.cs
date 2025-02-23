@@ -1,6 +1,7 @@
-﻿using API_Demo.Helpers.Exceptions;
+﻿using API_Demo.Configurations;
+using API_Demo.Helpers.Exceptions;
 using API_Demo.Services;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 
 namespace API_Demo_TEST
@@ -8,18 +9,20 @@ namespace API_Demo_TEST
     public class ServicesTest : CommonTest
     {
         const string PASSWORD = "test_password";
-        IConfiguration configuration;
+        //IConfiguration configuration;
+        IOptions<ApiDemoOptions> options;
 
         protected override void InitServices()
         {
-            configuration = (IConfiguration)scope.ServiceProvider.GetService(typeof(IConfiguration));
+            //configuration = (IConfiguration)scope.ServiceProvider.GetService(typeof(IConfiguration));
+            options = (IOptions<ApiDemoOptions>)scope.ServiceProvider.GetService(typeof(IOptions<ApiDemoOptions>));
         }
 
         [Test]
         public void MD5Services_Test()
         {
             string pass = PASSWORD;
-            var hash = configuration.GetValue<string>("hash");
+            var hash = options.Value.Hash; //configuration.GetValue<string>("hash");
             Assert.IsNotNull(hash);
 
             pass = MD5Service.Encrypt(pass,hash);
