@@ -61,7 +61,7 @@ namespace API_Demo
             });
             services.AddApiVersioning(options =>
             {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.DefaultApiVersion = new ApiVersion(1);
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true;
                 //options.ApiVersionReader = ApiVersionReader
@@ -74,14 +74,15 @@ namespace API_Demo
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;   
             });
+
             services.AddSingleton<DapperContext>();
             services.AddScoped<IValidator<ClienteReq>, ClienteValidator>();
             services.AddScoped<IValidator<RegistrarUsuarioReq>, UsuarioValidator>();
             services.AddScoped<IClienteRepository, ClienteRepository>();
-            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IProductoRepository, ProductoRepository>();
-            services.AddScoped<ILogginService, LogginService>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<IClienteService, ClienteService>();
+            services.AddScoped<ILogginService, LogginService>();
 
             AuthenticationConfigService.AddAuthenticationConfiguration(services, Configuration[Consts.StartupConfig.JWT_KEY]);   
             SwaggerConfigService.AddSwaggerConfiguration(services);

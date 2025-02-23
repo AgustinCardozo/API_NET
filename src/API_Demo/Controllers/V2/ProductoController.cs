@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace API_Demo.Controllers.V2
 {
+    [ApiVersion("2.0")]
     public class ProductoController : ProductoBaseController
     {
         public ProductoController(IProductoRepository productoRepository) : base(productoRepository) { }
